@@ -10,55 +10,45 @@ This is a REST API for controlling Fritz!Box devices using the FritzAPI package 
 ## Usage
 The server will start running on port 3000. You can use tools like cURL or Postman to test the endpoints. Here are the available endpoints:
 
-### Switches
-- Get list: GET `/switches/switchlist`
-- Get all information: GET `/switches/:id`
-- Get state: GET `/switches/switchstate/:id`
-- Set on: GET `/switches/setswitchon/:id`
-- Set off: GET `/switches/setswitchoff/:id`
-- Toggle: GET `/switches/setswitchtoggle/:id`
-- Get power: GET `/switches/getswitchpower/:id`
-- Get energy: GET `/switches/getswitchenergy/:id`
-- Get presence status: GET `/switches/getswitchpresence/:id`
-- Get name: GET `/switches/getswitchname/:id`
+## Switches
 
-## Get switches 
+### Get switches 
 ```
 GET /switches
 ```
 Retrieves a list of all switches with name connected to the Fritz!Box.
 
-## Get switch states 
+### Get switch states 
 ```
 GET /switches/:id
 ```
 Retrieves the state, power usage, energy usage, and name of a specific switch.
 
-## Get switch state
+### Get switch state
 ```
 GET /switches/:id/state
 ```
 Retrieves the state (on/off) of a specific switch.
 
-## Get switch power
+### Get switch power
 ```
 GET /switches/:id/power
 ```
 Retrieves the current power usage of a specific switch.
 
-## Get switch energy
+### Get switch energy
 ```
 GET /switches/:id/energy
 ```
 Retrieves the total energy usage of a specific switch.
 
-## Get switch presence
+### Get switch presence
 ```
 GET /switches/:id/presence
 ```
 Retrieves the presence status of a specific switch.
 
-## Get switch name
+### Get switch name
 ```
 GET /switches/:id/name
 ```
@@ -113,7 +103,7 @@ GET /getNightTemp/:id
 ```
 Retrieves the night temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
-## Get battery charge
+### Get battery charge
 ```
 GET /getBatteryCharge/:id
 ```
