@@ -54,13 +54,13 @@ GET /switches/:id/name
 ```
 Retrieves the name of a specific switch.
 
-## Switch on
+### Switch on
 ```
 GET /switches/:id/switchOn
 ```
 Turns on a specific switch.
 
-## Switch off
+### Switch off
 ```
 GET /switches/:id/switchOff
 ```
