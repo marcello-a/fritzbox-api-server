@@ -11,25 +11,119 @@ This is a REST API for controlling Fritz!Box devices using the FritzAPI package 
 The server will start running on port 3000. You can use tools like cURL or Postman to test the endpoints. Here are the available endpoints:
 
 ### Switches
-Get list: GET `/switches/switchlist`
-Get state: GET `/switches/switchstate/:id`
-Set on: GET `/switches/setswitchon/:id`
-Set off: GET `/switches/setswitchoff/:id`
-Toggle: GET `/switches/setswitchtoggle/:id`
-Get power: GET `/switches/getswitchpower/:id`
-Get energy: GET `/switches/getswitchenergy/:id`
-Get presence status: GET `/switches/getswitchpresence/:id`
-Get name: GET `/switches/getswitchname/:id`
+- Get list: GET `/switches/switchlist`
+- Get all information: GET `/switches/:id`
+- Get state: GET `/switches/switchstate/:id`
+- Set on: GET `/switches/setswitchon/:id`
+- Set off: GET `/switches/setswitchoff/:id`
+- Toggle: GET `/switches/setswitchtoggle/:id`
+- Get power: GET `/switches/getswitchpower/:id`
+- Get energy: GET `/switches/getswitchenergy/:id`
+- Get presence status: GET `/switches/getswitchpresence/:id`
+- Get name: GET `/switches/getswitchname/:id`
 
-### Thermostats
-Get list (polyfill): GET `/thermostat/thermostatlist`
-Get the current temperature: GET `/thermostat/getTempCurrent/:id`
-Set target temperature (supports 'ON'/'OFF' to enable/disable thermostat): GET `/thermostat/settargettemp/:id/:temp/`
-Get target temperature: GET `/thermostat/gettargettemp/:id`
-Get comfort temperature: GET `/thermostat/getcomforttemp/:id`
-Get night temperature: GET `/thermostat/getnighttemp/:id`
-Get battery charge (uses UI scraping, may be unstable): GET `/thermostat/getbatterycharge/:id`
-Get window open (uses UI scraping, may be unstable): GET `/thermostat/getwindowopen/:id`
+## Get switches 
+```
+GET /switches
+```
+Retrieves a list of all switches with name connected to the Fritz!Box.
+
+## Get switch states 
+```
+GET /switches/:id
+```
+Retrieves the state, power usage, energy usage, and name of a specific switch.
+
+## Get switch state
+```
+GET /switches/:id/state
+```
+Retrieves the state (on/off) of a specific switch.
+
+## Get switch power
+```
+GET /switches/:id/power
+```
+Retrieves the current power usage of a specific switch.
+
+## Get switch energy
+```
+GET /switches/:id/energy
+```
+Retrieves the total energy usage of a specific switch.
+
+## Get switch presence
+```
+GET /switches/:id/presence
+```
+Retrieves the presence status of a specific switch.
+
+## Get switch name
+```
+GET /switches/:id/name
+```
+Retrieves the name of a specific switch.
+
+## Switch on
+```
+GET /switches/:id/switchOn
+```
+Turns on a specific switch.
+
+## Switch off
+```
+GET /switches/:id/switchOff
+```
+Turns off a specific switch.
+
+## Thermostats
+### Get thermostat list
+```
+GET /
+```
+Retrieves the list of available thermostats. Returns a JSON array of objects containing the thermostat ID and name.
+
+### Get current temperature
+```
+GET /getTempCurrent/:id
+```
+Retrieves the current temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
+
+### Set target temperature
+```
+GET /setTargetTemp/:id/:temp
+```
+Sets the target temperature for the specified thermostat ID. The temperature must be specified in Celsius as a number. Supports 'ON'/'OFF' to enable/disable thermostat.
+
+### Get target temperature
+```
+GET /getTargetTemp/:id
+```
+Retrieves the target temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
+
+### Get comfort temperature
+```
+GET /getComfortTemp/:id
+```
+Retrieves the comfort temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
+
+### Get night temperature
+```
+GET /getNightTemp/:id
+```
+Retrieves the night temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
+
+## Get battery charge
+```
+GET /getBatteryCharge/:id
+```
+Retrieves the battery charge for the specified thermostat ID. This endpoint uses UI scraping and may be unstable. Returns the battery charge as a percentage.
+
+### Get window open
+```
+GET /getWindowOpen/:id
+```
+Retrieves the window open status for the specified thermostat ID. This endpoint uses UI scraping and may be unstable. Returns true if the window is open, false otherwise.
 
 All endpoints return JSON data. For endpoints that require an id parameter, you can get the IDs by calling the appropriate list function.
 

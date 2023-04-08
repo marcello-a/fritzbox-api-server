@@ -11,8 +11,13 @@ var f = new Fritz( process.env.FRITZ_USER, process.env.FRITZ_PW, "http://fritz.b
 router.get( '', async ( req, res ) => {
     try {
         const ains = await f.getSwitchList();
+        const result = [];
+        for ( let i = 0; i < ains.length; ++i ) {
+            const name = await f.getSwitchName( ains[ i ] );
+            result.push( { name: name, ains: ains[ i ] } );
+        }
         const response = {
-            switches: ains
+            switches: result
         };
         res.json( response );
     } catch ( error ) {
