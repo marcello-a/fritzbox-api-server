@@ -20,7 +20,7 @@ router.get( '/', async ( req, res ) => {
 } );
 
 // Get current temperature
-router.get( '/getTempCurrent/:id', async ( req, res ) => {
+router.get( '/getCurrentTemp/:id', async ( req, res ) => {
     try {
         const { id } = req.params;
         const targetTemp = await f.getTemperature( id );

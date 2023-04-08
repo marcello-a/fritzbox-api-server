@@ -75,7 +75,7 @@ Retrieves the list of available thermostats. Returns a JSON array of objects con
 
 ### Get current temperature
 ```
-GET /thermostat/getTempCurrent/:id
+GET /thermostat/getCurrentTemp/:id
 ```
 Retrieves the current temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
