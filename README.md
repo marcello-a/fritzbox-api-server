@@ -69,49 +69,49 @@ Turns off a specific switch.
 ## Thermostats
 ### Get thermostat list
 ```
-GET /
+GET /thermostat
 ```
 Retrieves the list of available thermostats. Returns a JSON array of objects containing the thermostat ID and name.
 
 ### Get current temperature
 ```
-GET /getTempCurrent/:id
+GET /thermostat/getTempCurrent/:id
 ```
 Retrieves the current temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
 ### Set target temperature
 ```
-GET /setTargetTemp/:id/:temp
+GET /thermostat/setTargetTemp/:id/:temp
 ```
 Sets the target temperature for the specified thermostat ID. The temperature must be specified in Celsius as a number. Supports 'ON'/'OFF' to enable/disable thermostat.
 
 ### Get target temperature
 ```
-GET /getTargetTemp/:id
+GET /thermostat/getTargetTemp/:id
 ```
 Retrieves the target temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
 ### Get comfort temperature
 ```
-GET /getComfortTemp/:id
+GET /thermostat/getComfortTemp/:id
 ```
 Retrieves the comfort temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
 ### Get night temperature
 ```
-GET /getNightTemp/:id
+GET /thermostat/getNightTemp/:id
 ```
 Retrieves the night temperature for the specified thermostat ID. Returns the temperature in Celsius as a number.
 
 ### Get battery charge
 ```
-GET /getBatteryCharge/:id
+GET /thermostat/getBatteryCharge/:id
 ```
 Retrieves the battery charge for the specified thermostat ID. This endpoint uses UI scraping and may be unstable. Returns the battery charge as a percentage.
 
 ### Get window open
 ```
-GET /getWindowOpen/:id
+GET /thermostat/getWindowOpen/:id
 ```
 Retrieves the window open status for the specified thermostat ID. This endpoint uses UI scraping and may be unstable. Returns true if the window is open, false otherwise.
 
