@@ -4,7 +4,9 @@ This is a REST API for controlling Fritz!Box devices using the FritzAPI package 
 ## Getting Started
 1. Clone this repository or download the source code
 2. Install dependencies by running `npm install`
-3. Add a file with the name `.env` in the root folder and add the following fields `FRITZ_USER: "<your-username>"` and `FRITZ_PW: "<your-password>"`
+3. Add a file with the name `.env` in the root folder and add the following fields:
+    - `FRITZ_USER: "<your-username>"`
+    - `FRITZ_PW: "<your-password>"`
 4. Start the server with `npm start`
 
 ## Usage
