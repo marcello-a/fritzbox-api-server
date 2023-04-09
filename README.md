@@ -1,6 +1,8 @@
 # Fritz!Box REST API
 This is a REST API for controlling Fritz!Box devices using the FritzAPI package and Express framework. The API provides GET endpoints for various functions related to controlling switches and thermostats.
 
+used Package from https://github.com/andig/fritzapi
+
 ## Getting Started
 1. Clone this repository or download the source code
 2. Install dependencies by running `npm install`

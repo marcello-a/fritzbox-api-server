@@ -35,14 +35,12 @@ router.get( '/:id', async ( req, res ) => {
         const name = await f.getSwitchName( switchId );
         const state = await f.getSwitchState( switchId );
         const power = await f.getSwitchPower( switchId );
-        const energy = await f.getSwitchEnergy( switchId );
         const response = {
             sessionId: f.getSID(),
             switchId: switchId,
             name: name,
             state: state,
             power: power,
-            energy: energy,
         };
         res.json( response );
     } catch ( error ) {
@@ -83,7 +81,7 @@ router.get( '/:id/power', async ( req, res ) => {
     }
 } );
 
-// Route for getting the energy of a switch
+// Route for getting the total enery consumption. returns the value in Wh of a switch
 router.get( '/:id/energy', async ( req, res ) => {
     const switchId = req.params.id;
     try {
