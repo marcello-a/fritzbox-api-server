@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fritz!Box REST API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+    </style>
+    <script>
+
+        async function handleSwitchClick( action ) {
+            const switchId = document.getElementById( 'switchIdInput' ).value;
+
+            try {
+                const response = await fetch( `/switches/${switchId}/${action}` );
+                const data = await response.json();
+
+                // Display the status code
+                const statusCodeDiv = document.getElementById( 'status-code-switch' );
+                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+
+                // Display the JSON response body
+                const responseBodyDiv = document.getElementById( 'response-body-switch' );
+                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
+            } catch ( error ) {
+                console.error( error );
+                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-switch' ).innerText = error;
+            }
+        }
+
+        async function handleThermostatClick( action ) {
+            const thermostatId = document.getElementById( 'thermostatIdInput' ).value;
+
+            try {
+                const response = await fetch( `/thermostat/${action}/${thermostatId}` );
+                const data = await response.json();
+
+                // Display the status code
+                const statusCodeDiv = document.getElementById( 'status-code-temperature' );
+                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+
+                // Display the JSON response body
+                const responseBodyDiv = document.getElementById( 'response-body-temperature' );
+                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
+            } catch ( error ) {
+                console.error( error );
+                document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-temperature' ).innerText = error;
+            }
+        }
+    </script>
+</head>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Node.js App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Add your custom styles here, if needed */
+    </style>
+    <script>
+        // Your JavaScript code here
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-4">Welcome to Fritz!Box REST API</h1>
+        <p>This is a REST API for controlling Fritz!Box devices using the FritzAPI package and Express framework. The
+            API provides GET endpoints for various functions related to controlling switches and thermostats.</p>
+
+        <h1>Schalter (Switch)</h1>
+        <!-- Input field for Switch ID -->
+        <div class="form-group">
+            <label for="switchIdInput">Enter Switch ID:</label>
+            <input type="text" id="switchIdInput" name="switchId" value="116570584535" required class="form-control">
+        </div>
+
+        <!-- Buttons for different actions -->
+        <div class="btn-group d-flex flex-wrap justify-content-between">
+            <button onclick="handleSwitchClick('state')" class="btn btn-outline-primary">Get Switch State</button>
+            <button onclick="handleSwitchClick('power')" class="btn btn-outline-primary">Get Switch Power</button>
+            <button onclick="handleSwitchClick('energy')" class="btn btn-outline-primary">Get Switch Energy</button>
+            <button onclick="handleSwitchClick('presence')" class="btn btn-outline-primary">Get Switch
+                Presence</button>
+            <button onclick="handleSwitchClick('name')" class="btn btn-outline-primary">Get Switch Name</button>
+        </div>
+        <div class="mt-4 btn-group d-flex flex-wrap justify-content-between">
+            <button onclick="handleSwitchClick('switchOn')" class="btn btn-success">Switch On</button>
+            <button onclick="handleSwitchClick('switchOff')" class="btn btn-danger">Switch Off</button>
+            <button onclick="handleSwitchClick('toggleSwitch')" class="btn btn-warning">Toggle Switch</button>
+        </div>
+
+        <!-- Display the status code and JSON response here -->
+        <div class="mt-4">
+            <h2>Status Code:</h2>
+            <pre id="status-code-switch"></pre>
+        </div>
+        <div>
+            <h2>Response Body:</h2>
+            <pre id="response-body-switch"></pre>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h1 class="mt-4">Thermostat</h1>
+
+        <!-- Input field for Thermostat ID -->
+        <div class="form-group">
+            <label for="thermostatIdInput">Enter Thermostat ID:</label>
+            <input type="text" id="thermostatIdInput" name="thermostatId" value="139790237763" required
+                class="form-control">
+        </div>
+
+        <!-- Buttons for different actions -->
+        <div class="btn-group d-flex flex-wrap justify-content-between justify-content-md-start">
+            <button onclick="handleThermostatClick('getCurrentTemp')" class="btn btn-outline-primary">Get Current
+                Temperature</button>
+            <button onclick="handleThermostatClick('getTargetTemp')" class="btn btn-outline-primary">Get Target
+                Temperature</button>
+            <button onclick="handleThermostatClick('getComfortTemp')" class="btn btn-outline-primary">Get Comfort
+                Temperature</button>
+            <button onclick="handleThermostatClick('getNightTemp')" class="btn btn-outline-primary">Get Night
+                Temperature</button>
+            <button onclick="handleThermostatClick('getBatteryCharge')" class="btn btn-outline-primary">Get Battery
+                Charge</button>
+            <button onclick="handleThermostatClick('getWindowOpen')" class="btn btn-outline-primary">Get Window Open
+                Status</button>
+            <button onclick="handleThermostatClick('setTargetTemp/20')" class="btn btn-success">Set Target Temperature
+                to 20°C</button>
+        </div>
+
+        <!-- Display the status code and JSON response here -->
+        <div class="mt-4">
+            <h2>Status Code:</h2>
+            <pre id="status-code-temperature"></pre>
+        </div>
+        <div>
+            <h2>Response Body:</h2>
+            <pre id="response-body-temperature"></pre>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+</html>

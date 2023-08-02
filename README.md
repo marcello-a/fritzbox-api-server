@@ -126,3 +126,8 @@ Pull requests and bug reports are welcome! Please open an issue first to discuss
 
 # License
 This project is licensed under the MIT License.
+
+
+# TODO
+- States automatisch abfragen und mit status läuten anzeigen
+- Disable, wenn status off ist den ausschalter
