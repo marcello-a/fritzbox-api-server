@@ -27,21 +27,22 @@
         }
 
         /* Info für Schalter */
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        .shadow, .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
             transition: 0.3s;
         }
-        .card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+
+        .shadow:hover, .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
         }
     </style>
     <script>
 
         async function handleSwitchClick(action) {
-            const switchId = document.getElementById( 'switchIdInput' ).value;
+            const switchId = action === '' ? '' : '/' + document.getElementById( 'switchIdInput' ).value;
 
             try {
-                const response = await fetch( `/switches/${switchId}/${action}` );
+                const response = await fetch( `/switches${switchId}/${action}` );
                 const data = await response.json();
 
                 // Display the status code
@@ -90,8 +91,52 @@
             } );
         }
 
-        window.onload = function () {
-            handleSwitchClick( '' );
+        async function setSwitchInfo() {
+            const switchId = document.getElementById( 'switchIdInput' ).value;
+
+            try {
+                const response = await fetch( `/switches/${switchId}/` );
+                const data = await response.json();
+
+                console.log( 'res', response )
+                console.log( 'data', data )
+
+                // Zugriff auf die span-Elemente
+                const nameSpan = document.querySelector( '#nameSpan' );
+                const temperatureSpan = document.querySelector( '#temperatureSpan' );
+                const powerSpan = document.querySelector( '#powerSpan' );
+                const energySpan = document.querySelector( '#energySpan' );
+                const toggleSwitch = document.querySelector( '#toggleSwitch' );
+                const presenceSpan = document.querySelector( '#presenceSpan' );
+
+                // Setzen der Werte aus dem Response
+                nameSpan.textContent = data.name;
+                temperatureSpan.textContent = data.temperature + '°C';
+                toggleSwitch.checked = !data.status;
+                powerSpan.textContent = data.power + ' W';
+                presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
+
+                let energy = data.energy.toString(); // Konvertiere den Energieverbrauch in einen String
+                energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 ); // Füge das Komma ein
+                energySpan.textContent = energy + ' kWh';
+
+
+                // Display the status code
+                const statusCodeDiv = document.getElementById( 'status-code-switch' );
+                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+
+                // Display the JSON response body
+                const responseBodyDiv = document.getElementById( 'response-body-switch' );
+                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
+            } catch ( error ) {
+                console.error( error );
+                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-switch' ).innerText = error;
+            }
+        }
+
+        window.onload = async function () {
+            // await setSwitchInfo();
         };
     </script>
 </head>
@@ -116,225 +161,262 @@ Accordion mit debug info
 -->
 <div class="container">
     <h1 class="mt-4">Welcome to Fritz!Box REST API</h1>
-    <p>Dies ist eine REST-API zur Steuerung von Fritz!Box-Geräten unter Verwendung des FritzAPI-Pakets und des
-        Express-Frameworks. Die
-        API bietet GET-Endpunkte für verschiedene Funktionen im Zusammenhang mit der Steuerung von Schaltern und
-        Thermostaten.</p>
 
-    <h1>Schalter für Steckdose</h1>
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col">
 
-    <!-- onchange="handleSwitchClick('toggleSwitch')" -->
-
-    <!--   Status Ansicht (Toggle) -->
-    <div class="container mt-5 d-flex">
-        <div class="mr-2">Aus</div>
-        <div class="custom-control custom-switch" style="width: 6rem; height: 3rem;">
-            <input type="checkbox" class="custom-control-input" id="toggleSwitch">
-            <label class="custom-control-label" for="toggleSwitch" style="width: 100%;">
-                An
-            </label>
-        </div>
-    </div>
-
-
-    <!-- Buttons for different actions -->
-    <button onclick="handleSwitchClick('toggleSwitch')" class="btn btn-warning">Toggle Switch</button>
-
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
+                <h2 class="mt-4">Schalter für Steckdose</h2>
+                <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Informationen</h5>
+                        <h5 class="card-title">Schalter Informationen</h5>
                         <div class="row">
                             <div class="col">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Name:
-                                        <span class="text-muted">Hausmusik</span>
+                                        <span id="nameSpan" class="text-muted"></span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Status:
-                                        <span class="text-muted">Ausgeschaltet</span>
+                                        Zustand:
+
+                                        <!--   Status Ansicht (Toggle) -->
+                                        <div class="d-flex">
+                                            <div class="mr-2">Aus</div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="toggleSwitch">
+                                                <label class="custom-control-label" for="toggleSwitch" style="width: 100%;">
+                                                    An
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Temperature:
+                                        <span id="temperatureSpan" class="text-muted"></span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Stromverbrauch:
-                                        <span class="text-muted">0</span>
+                                        <span id="powerSpan" class="text-muted"></span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Energieverbrauch:
-                                        <span class="text-muted">119409 Wh</span>
+                                        <span id="energySpan" class="text-muted"></span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Präsenz:
-                                        <span class="text-muted">Anwesend</span>
+                                        <span id="presenceSpan" class="text-muted"></span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <div class="mb-4 btn-group d-flex flex-wrap justify-content-between">
-        <button onclick="handleSwitchClick('switchOn')" class="btn btn-success">Switch On</button>
-        <button onclick="handleSwitchClick('switchOff')" class="btn btn-danger">Switch Off</button>
-    </div>
-
-    <div id="accordion">
-        <div class="card">
-            <div class="card-header btn" id="headingOne" data-toggle="collapse" data-target="#collapseOne"
-                 aria-expanded="true" aria-controls="collapseOne">
-                <h5 class="mb-0">
-                    Legende
-                </h5>
-            </div>
-
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                <div class="card-body">
-                    Content for section 1...
+                <div class="shadow mb-4 btn-group d-flex flex-wrap justify-content-between">
+                    <button onclick="handleSwitchClick('switchOn')" class="btn btn-success">Switch On</button>
+                    <button onclick="handleSwitchClick('switchOff')" class="btn btn-danger">Switch Off</button>
                 </div>
             </div>
-        </div>
+            <div class="col">
 
-        <div class="card">
-            <div class="card-header btn" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo"
-                 aria-expanded="true" aria-controls="collapseTwo">
-                <h5 class="mb-0">
-                    Schalter ID
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                <div class="card-body">
-                    <!-- Input field for Switch ID -->
-                    <div class="form-group">
-                        <label for="switchIdInput">Switch ID:</label>
-                        <input type="text" id="switchIdInput" name="switchId" value="116570584535" required
-                               class="form-control">
+                <h2 class="mt-4">Thermostat</h2>
+
+                <div class="card">
+                    <div class="card-header">
+                        Thermostat - <span id="thermostat-name">Wohnzimmer</span>
                     </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Aktuelle Temperatur: <span id="current-temp">21°C</span></li>
+                        <li class="list-group-item">Komforttemperatur: <span id="comfort-temp">22°C</span></li>
+                        <li class="list-group-item">Nachttemperatur: <span id="night-temp">18°C</span></li>
+                        <li class="list-group-item">Zieltemperatur: <span id="target-temp">21°C</span></li>
+                        <li class="list-group-item">Fenster: <span id="window-status">Geschlossen</span></li>
+                        <li class="list-group-item">
+                            Batterieladung: <span id="battery-charge">80%</span>
+                            <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
+                        </li>
+                        <li class="list-group-item">
+                            Gerätestatus:
+                            <span class="status-indicator connected"></span> Verbunden
+                            <!-- Use "disconnected" class for a disconnected status -->
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card">
-            <div class="card-header btn" id="headingThree" data-toggle="collapse" data-target="#collapseThree"
-                 aria-expanded="true" aria-controls="collapseThree">
-                <h5 class="mb-0">
-                    Technische Details für den Schalter
-                </h5>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                <div class="card-body">
-                    <div class="container mt-5">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <button onclick="handleSwitchClick('state')"
-                                        class="btn btn-outline-primary btn-block mb-3">Update Schalter Status
-                                </button>
-                                <button onclick="handleSwitchClick('power')"
-                                        class="btn btn-outline-primary btn-block mb-3">Get Switch Power
-                                </button>
-                                <button onclick="handleSwitchClick('energy')"
-                                        class="btn btn-outline-primary btn-block mb-3">Get Switch Energy
-                                </button>
-                                <button onclick="handleSwitchClick('presence')"
-                                        class="btn btn-outline-primary btn-block mb-3">Get Switch Presence
-                                </button>
-                                <button onclick="handleSwitchClick('name')"
-                                        class="btn btn-outline-primary btn-block mb-3">Get Switch Name
-                                </button>
+
+    <hr>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <h2>Schalter</h2>
+                <div id="accordion">
+                    <div class="card">
+                        <div class="card-header btn" id="headingTwo" data-toggle="collapse show" data-target="#collapseTwo"
+                             aria-expanded="true" aria-controls="collapseTwo">
+                            <h5 class="mb-0">
+                                Schalter ID
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <!-- Input field for Switch ID -->
+                                <div class="form-group">
+                                    <label for="switchIdInput">Switch ID:</label>
+                                    <input type="text" id="switchIdInput" name="switchId" value="116570584535" required
+                                           class="form-control">
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="card">
+                        <div class="card-header btn" id="headingThree" data-toggle="collapse"
+                             data-target="#collapseThree"
+                             aria-expanded="true" aria-controls="collapseThree">
+                            <h5 class="mb-0">
+                                Technische Details
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                <!-- Display the status code and JSON response here -->
+                                <div class="mt-4">
+                                    <h2>Status Code:</h2>
+                                    <pre id="status-code-switch">-</pre>
+                                </div>
+                                <div>
+                                    <h2>Response Body:</h2>
+                                    <pre id="response-body-switch">-</pre>
+                                </div>
 
-                    <!-- Display the status code and JSON response here -->
-                    <div class="mt-4">
-                        <h2>Status Code:</h2>
-                        <pre id="status-code-switch"></pre>
+
+                                <div class="container mt-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button onclick="handleSwitchClick('')"
+                                                    class="btn btn-primary btn-block mb-3">Get Switch List
+                                            </button>
+                                            <button onclick="handleSwitchClick('state')"
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Schalter
+                                                Status
+                                            </button>
+                                            <button onclick="handleSwitchClick('power')"
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Switch Power
+                                            </button>
+                                            <button onclick="handleSwitchClick('energy')"
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Switch Energy
+                                            </button>
+                                            <button onclick="handleSwitchClick('presence')"
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Switch Presence
+                                            </button>
+                                            <button onclick="handleSwitchClick('name')"
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Switch Name
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h2>Response Body:</h2>
-                        <pre id="response-body-switch"></pre>
+                </div>
+            </div>
+
+            <div class="col">
+
+                <h2>Thermostat</h2>
+                <div id="accordion2">
+                    <div class="card">
+                        <div class="card-header btn" id="headingThermostatOne" data-toggle="collapse"
+                             data-target="#collapseThermostatOne"
+                             aria-expanded="true" aria-controls="collapseThermostatOne">
+                            <h5 class="mb-0">
+                                Thermostat ID
+                            </h5>
+                        </div>
+
+                        <div id="collapseThermostatOne" class="collapse show" aria-labelledby="headingThermostatOne"
+                             data-parent="#accordion">
+                            <div class="card-body">
+
+                                <!-- Input field for Thermostat ID -->
+                                <div class="form-group">
+                                    <label for="thermostatIdInput">Enter Thermostat ID:</label>
+                                    <input type="text" id="thermostatIdInput" name="thermostatId" value="139790237763"
+                                           required
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header btn" id="headingThermostatTwo" data-toggle="collapse" data-target="#collapseThermostatTwo"
+                             aria-expanded="true" aria-controls="collapseThermostatTwo">
+                            <h5 class="mb-0">
+                                Technische Details
+                            </h5>
+                        </div>
+                        <div id="collapseThermostatTwo" class="collapse" aria-labelledby="headingThermostatTwo" data-parent="#accordion2">
+                            <div class="card-body">
+                                <!-- Display the status code and JSON response here -->
+                                <div class="mt-4">
+                                    <h2>Status Code:</h2>
+                                    <pre id="status-code-temperature">-</pre>
+                                </div>
+                                <div>
+                                    <h2>Response Body:</h2>
+                                    <pre id="response-body-temperature">-</pre>
+                                </div>
+
+
+                                <div class="container mt-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- Buttons for different actions -->
+                                            <button onclick="handleThermostatClick('getCurrentTemp')"
+                                                    class="btn btn-outline-primary">Get Current
+                                                Temperature
+                                            </button>
+                                            <button onclick="handleThermostatClick('getTargetTemp')"
+                                                    class="btn btn-outline-primary">Get Target
+                                                Temperature
+                                            </button>
+                                            <button onclick="handleThermostatClick('getComfortTemp')"
+                                                    class="btn btn-outline-primary">Get Comfort
+                                                Temperature
+                                            </button>
+                                            <button onclick="handleThermostatClick('getNightTemp')"
+                                                    class="btn btn-outline-primary">Get Night
+                                                Temperature
+                                            </button>
+                                            <button onclick="handleThermostatClick('getBatteryCharge')"
+                                                    class="btn btn-outline-primary">Get Battery
+                                                Charge
+                                            </button>
+                                            <button onclick="handleThermostatClick('getWindowOpen')"
+                                                    class="btn btn-outline-primary">Get Window Open
+                                                Status
+                                            </button>
+                                            <button onclick="handleThermostatClick('setTargetTemp/20')"
+                                                    class="btn btn-success">Set Target Temperature
+                                                to 20°C
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<hr>
-
-<div class="container">
-    <h1 class="mt-4">Thermostat</h1>
-
-    <!-- Input field for Thermostat ID -->
-    <div class="form-group">
-        <label for="thermostatIdInput">Enter Thermostat ID:</label>
-        <input type="text" id="thermostatIdInput" name="thermostatId" value="139790237763" required
-               class="form-control">
-    </div>
-
-    <!-- Buttons for different actions -->
-    <div class="btn-group d-flex flex-wrap justify-content-between justify-content-md-start">
-        <button onclick="handleThermostatClick('getCurrentTemp')" class="btn btn-outline-primary">Get Current
-            Temperature
-        </button>
-        <button onclick="handleThermostatClick('getTargetTemp')" class="btn btn-outline-primary">Get Target
-            Temperature
-        </button>
-        <button onclick="handleThermostatClick('getComfortTemp')" class="btn btn-outline-primary">Get Comfort
-            Temperature
-        </button>
-        <button onclick="handleThermostatClick('getNightTemp')" class="btn btn-outline-primary">Get Night
-            Temperature
-        </button>
-        <button onclick="handleThermostatClick('getBatteryCharge')" class="btn btn-outline-primary">Get Battery
-            Charge
-        </button>
-        <button onclick="handleThermostatClick('getWindowOpen')" class="btn btn-outline-primary">Get Window Open
-            Status
-        </button>
-        <button onclick="handleThermostatClick('setTargetTemp/20')" class="btn btn-success">Set Target Temperature
-            to 20°C
-        </button>
-    </div>
-
-    <!-- Display the status code and JSON response here -->
-    <div class="mt-4">
-        <h2>Status Code:</h2>
-        <pre id="status-code-temperature"></pre>
-    </div>
-    <div>
-        <h2>Response Body:</h2>
-        <pre id="response-body-temperature"></pre>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            Thermostat - <span id="thermostat-name">Wohnzimmer</span>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">Aktuelle Temperatur: <span id="current-temp">21°C</span></li>
-            <li class="list-group-item">Komforttemperatur: <span id="comfort-temp">22°C</span></li>
-            <li class="list-group-item">Nachttemperatur: <span id="night-temp">18°C</span></li>
-            <li class="list-group-item">Zieltemperatur: <span id="target-temp">21°C</span></li>
-            <li class="list-group-item">Fenster: <span id="window-status">Geschlossen</span></li>
-            <li class="list-group-item">
-                Batterieladung: <span id="battery-charge">80%</span>
-                <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
-            </li>
-            <li class="list-group-item">
-                Gerätestatus:
-                <span class="status-indicator connected"></span> Verbunden
-                <!-- Use "disconnected" class for a disconnected status -->
-            </li>
-        </ul>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

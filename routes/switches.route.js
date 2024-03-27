@@ -10,7 +10,9 @@ var f = new Fritz( process.env.FRITZ_USER, process.env.FRITZ_PW, "http://fritz.b
 // Route for getting the list of switches
 router.get( '', async ( req, res ) => {
     try {
+        console.log('los')
         const ains = await f.getSwitchList();
+        console.log('danach')
         const result = [];
         for ( let i = 0; i < ains.length; ++i ) {
             const name = await f.getSwitchName( ains[ i ] );
@@ -30,18 +32,22 @@ router.get( '', async ( req, res ) => {
 router.get( '/:id', async ( req, res ) => {
     const switchId = req.params.id;
     try {
-        const name = await f.getSwitchName( switchId );
-        const energy = await f.getSwitchEnergy( switchId );
-        const state = await f.getSwitchState( switchId );
-        const power = await f.getSwitchPower( switchId );
-        const presence = await f.getSwitchPresence( switchId );
+        const [name, energy, state, power, presence, temperature] = await Promise.all([
+            f.getSwitchName(switchId),
+            f.getSwitchEnergy(switchId),
+            f.getSwitchState( switchId ),
+            f.getSwitchPower(switchId),
+            f.getSwitchPresence(switchId),
+            f.getTemperature(switchId)
+        ]);
+
         const response = {
             sessionId: f.getSID(),
             switchId: switchId,
             name: name,
-            state: state,
             power: power,
             energy: energy,
+            temperature: temperature,
             presence: presence,
         };
         res.json( response );
@@ -67,7 +73,7 @@ router.get( '/:id/state', async ( req, res ) => {
     }
 } );
 
-// Route for getting the power of a switch
+// Route for getting the power of a switch in Watt
 router.get( '/:id/power', async ( req, res ) => {
     const switchId = req.params.id;
     try {
