@@ -19,12 +19,13 @@ router.get( '/', async ( req, res ) => {
     }
 } );
 
+
 // Get current temperature
 router.get( '/getCurrentTemp/:id', async ( req, res ) => {
     try {
         const { id } = req.params;
-        const targetTemp = await f.getTemperature( id );
-        res.json( targetTemp );
+        const currentTemp = await f.getTemperature( id );
+        res.json( currentTemp );
     } catch ( error ) {
         console.error( error );
         res.status( 500 ).send( 'Error retrieving current temperature' );
