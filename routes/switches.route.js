@@ -29,7 +29,6 @@ router.get( '', async ( req, res ) => {
 // Route for getting the state of a switch
 router.get( '/:id', async ( req, res ) => {
     const switchId = req.params.id;
-    const name = await f.getSwitchName( switchId );
     try {
         const name = await f.getSwitchName( switchId );
         const energy = await f.getSwitchEnergy( switchId );
