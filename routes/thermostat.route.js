@@ -8,8 +8,8 @@ var Fritz = require( 'fritzapi' ).Fritz;
 var f = new Fritz( process.env.FRITZ_USER, process.env.FRITZ_PW, "http://fritz.box" );
 
 let lastResponse = [
-    { name: "Bitte Aktualisieren", currentTemp: "21", comfortTemp: "22", nightTemp: "18", targetTemp: "21", windowStatus: "Geschlossen", batteryCharge: "80" },
-    { name: "Bitte Aktualisieren", currentTemp: "20", comfortTemp: "22", nightTemp: "17", targetTemp: "20", windowStatus: "Geöffnet", batteryCharge: "70" },
+    { Name: "Bitte Aktualisieren", Aktuell: "21",  Ziel: "20", Komfort: "22", Nacht: "18", Battery: "80" },
+    { Name: "Bitte Aktualisieren", Aktuell: "20",  Ziel: "20", Komfort: "22", Nacht: "17", Battery: "70" },
 ];
 
 
