@@ -315,8 +315,6 @@
 
                     var responseBodyDiv = document.getElementById('response-body-switch');
                     responseBodyDiv.innerText = JSON.stringify(data, null, 2);
-
-                    setLastUpdate('#lastSwitchUpdate');
                 })
                 .catch(function (error) {
                     console.error(error);
@@ -325,6 +323,7 @@
                 })
                 .finally(function () {
                     removeSwitchSpinner();
+                    setLastUpdate('#lastSwitchUpdate');
                 });
         }
 
@@ -383,7 +382,6 @@
                     fetchAllThermostatData(thermostatIds)
                         .then(function (data) {
                             createThermostatTable(data);
-                            setLastUpdate('#lastThermostatUpdate');
                         })
                         .catch(function (error) {
                             console.error('Fehler beim Abrufen der Daten:', error);
@@ -394,6 +392,7 @@
                         })
                         .finally(function () {
                             removeThermostatSpinner();
+                            setLastUpdate('#lastThermostatUpdate');
                         });
                 });
         }
