@@ -7,6 +7,10 @@ require( 'dotenv' ).config();
 var Fritz = require( 'fritzapi' ).Fritz;
 var f = new Fritz( process.env.FRITZ_USER, process.env.FRITZ_PW, "http://fritz.box" );
 
+router.use((req, res, next) => {
+    console.log(`${new Date().toLocaleString()} - Route ${req.originalUrl} wurde aufgerufen`);
+    next();
+});
 
 // Get thermostat list (polyfill)
 router.get( '/', async ( req, res ) => {
