@@ -54,7 +54,7 @@ router.get( '/:id', async ( req, res ) => {
         res.json( response );
     } catch ( error ) {
         console.error( error );
-        res.status( 500 ).send( `Error retrieving all states of switch ${switchId}` );
+        res.status( 500 ).send( `Error retrieving all states of switch ${id}` );
     }
 } );
 
