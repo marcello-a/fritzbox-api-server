@@ -22,10 +22,12 @@ app.use( '/all', allRoute );
 app.use( '/switches', switchesRoute );
 app.use( '/thermostat', thermostatRoute );
 
-// Start the server
-app.listen( 3003, '192.168.2.159', () => {
-    console.log( 'Server started on port 192.168.2.159:3003' );
-} );
+const ipAddress = '192.168.2.159';
+const port = 3003
 
+// Start the server
+app.listen( port, ipAddress, () => {
+    console.log( `Server started on port ${ipAddress}:${port}` );
+} );
 
 // thermostatService()
