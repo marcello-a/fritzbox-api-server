@@ -39,84 +39,84 @@
     <script>
         function handleSwitchClick(action) {
             addSwitchSpinner();
-            var switchId = action === '' ? '' : '/' + document.getElementById('switchIdInput').value;
+            var switchId = action === '' ? '' : '/' + document.getElementById( 'switchIdInput' ).value;
 
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/switches' + switchId + '/' + action, true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
+            xhr.open( 'GET', '/switches' + switchId + '/' + action, true );
+            xhr.onload = function () {
+                if ( xhr.status === 200 ) {
+                    var data = JSON.parse( xhr.responseText );
 
                     // Display the status code
-                    var statusCodeDiv = document.getElementById('status-code-switch');
+                    var statusCodeDiv = document.getElementById( 'status-code-switch' );
                     statusCodeDiv.innerText = 'Status Code: ' + xhr.status;
 
                     // Display the JSON response body
-                    var responseBodyDiv = document.getElementById('response-body-switch');
-                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
+                    var responseBodyDiv = document.getElementById( 'response-body-switch' );
+                    responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
                 } else {
-                    console.error(xhr.statusText);
-                    document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
-                    document.getElementById('response-body-switch').innerText = xhr.statusText;
+                    console.error( xhr.statusText );
+                    document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-switch' ).innerText = xhr.statusText;
                 }
                 removeSwitchSpinner();
             };
-            xhr.onerror = function() {
-                console.error(xhr.statusText);
-                document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
-                document.getElementById('response-body-switch').innerText = xhr.statusText;
+            xhr.onerror = function () {
+                console.error( xhr.statusText );
+                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-switch' ).innerText = xhr.statusText;
                 removeSwitchSpinner();
             };
             xhr.send();
         }
 
         function switchToggle(on) {
-            if (on) {
-                handleSwitchClick('switchOn');
+            if ( on ) {
+                handleSwitchClick( 'switchOn' );
             } else {
-                handleSwitchClick('switchOff');
+                handleSwitchClick( 'switchOff' );
             }
             setSwitchInfo();
         }
 
         function handleThermostatClick(action) {
             addThermostatSpinner();
-            var thermostatId = action === '' ? '' : '/' + document.getElementById('thermostatIdInput').value;
+            var thermostatId = action === '' ? '' : '/' + document.getElementById( 'thermostatIdInput' ).value;
 
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/thermostat/' + action + thermostatId, true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText);
+            xhr.open( 'GET', '/thermostat/' + action + thermostatId, true );
+            xhr.onload = function () {
+                if ( xhr.status === 200 ) {
+                    var data = JSON.parse( xhr.responseText );
 
                     // Display the status code
-                    var statusCodeDiv = document.getElementById('status-code-temperature');
+                    var statusCodeDiv = document.getElementById( 'status-code-temperature' );
                     statusCodeDiv.innerText = 'Status Code: ' + xhr.status;
 
                     // Display the JSON response body
-                    var responseBodyDiv = document.getElementById('response-body-temperature');
-                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
+                    var responseBodyDiv = document.getElementById( 'response-body-temperature' );
+                    responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
                 } else {
-                    console.error(xhr.statusText);
-                    document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
-                    document.getElementById('response-body-temperature').innerText = xhr.statusText;
+                    console.error( xhr.statusText );
+                    document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-temperature' ).innerText = xhr.statusText;
                 }
                 removeThermostatSpinner();
             };
-            xhr.onerror = function() {
-                console.error(xhr.statusText);
-                document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
-                document.getElementById('response-body-temperature').innerText = xhr.statusText;
+            xhr.onerror = function () {
+                console.error( xhr.statusText );
+                document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-temperature' ).innerText = xhr.statusText;
                 removeThermostatSpinner();
             };
             xhr.send();
         }
 
         function addSwitchSpinner() {
-            var switchSpinner = document.getElementById('switchSpinner');
-            var switchCard = document.getElementById('switchCard');
-            var switchBtnOn = document.getElementById('switchBtnOn');
-            var switchBtnOff = document.getElementById('switchBtnOff');
+            var switchSpinner = document.getElementById( 'switchSpinner' );
+            var switchCard = document.getElementById( 'switchCard' );
+            var switchBtnOn = document.getElementById( 'switchBtnOn' );
+            var switchBtnOff = document.getElementById( 'switchBtnOff' );
 
             switchSpinner.style.display = 'block';
             switchCard.className += ' text-muted'; // Klassen hinzufügen, um die Card zu deaktivieren
@@ -127,26 +127,26 @@
         }
 
         function removeSwitchSpinner() {
-            var switchSpinner = document.getElementById('switchSpinner');
-            var switchCard = document.getElementById('switchCard');
-            var switchBtnOn = document.getElementById('switchBtnOn');
-            var switchBtnOff = document.getElementById('switchBtnOff');
+            var switchSpinner = document.getElementById( 'switchSpinner' );
+            var switchCard = document.getElementById( 'switchCard' );
+            var switchBtnOn = document.getElementById( 'switchBtnOn' );
+            var switchBtnOff = document.getElementById( 'switchBtnOff' );
 
             switchSpinner.style.display = 'none';
-            switchCard.className = switchCard.className.replace(/\btext-muted\b/g, ''); // Entfernen der Klasse, um die Card zu aktivieren
-            switchBtnOn.className = switchBtnOn.className.replace(/\bdisabled\b/g, ''); // Entfernen der Klasse, um den Schalter-On-Button zu aktivieren
-            switchBtnOff.className = switchBtnOff.className.replace(/\bdisabled\b/g, ''); // Entfernen der Klasse, um den Schalter-Off-Button zu aktivieren
+            switchCard.className = switchCard.className.replace( /\btext-muted\b/g, '' ); // Entfernen der Klasse, um die Card zu aktivieren
+            switchBtnOn.className = switchBtnOn.className.replace( /\bdisabled\b/g, '' ); // Entfernen der Klasse, um den Schalter-On-Button zu aktivieren
+            switchBtnOff.className = switchBtnOff.className.replace( /\bdisabled\b/g, '' ); // Entfernen der Klasse, um den Schalter-Off-Button zu aktivieren
             switchBtnOn.disabled = false;
             switchBtnOff.disabled = false;
         }
 
         function addThermostatSpinner() {
-            var thermostatSpinner = document.getElementById('thermostatSpinner');
+            var thermostatSpinner = document.getElementById( 'thermostatSpinner' );
             thermostatSpinner.style.display = 'block';
         }
 
         function removeThermostatSpinner() {
-            var thermostatSpinner = document.getElementById('thermostatSpinner');
+            var thermostatSpinner = document.getElementById( 'thermostatSpinner' );
             thermostatSpinner.style.display = 'none';
         }
 
@@ -156,14 +156,13 @@
         }
 
         function setLastUpdate(selector) {
-            console.log('callerd', selector)
-            var lastUpdateSpan = document.querySelector(selector);
+            var lastUpdateSpan = document.querySelector( selector );
             var currentDate = new Date();
             var year = currentDate.getFullYear();
-            var month = addLeadingZero(currentDate.getMonth() + 1); // Monat ist nullbasiert, daher +1 und mit führender Null für einstellige Monate
-            var day = addLeadingZero(currentDate.getDate()); // Führende Null für einstellige Tage
-            var hours = addLeadingZero(currentDate.getHours()); // Führende Null für einstellige Stunden
-            var minutes = addLeadingZero(currentDate.getMinutes()); // Führende Null für einstellige Minuten
+            var month = addLeadingZero( currentDate.getMonth() + 1 ); // Monat ist nullbasiert, daher +1 und mit führender Null für einstellige Monate
+            var day = addLeadingZero( currentDate.getDate() ); // Führende Null für einstellige Tage
+            var hours = addLeadingZero( currentDate.getHours() ); // Führende Null für einstellige Stunden
+            var minutes = addLeadingZero( currentDate.getMinutes() ); // Führende Null für einstellige Minuten
 
             lastUpdateSpan.innerHTML = 'letztes update: ' + hours + ':' + minutes + '<br>' + day + '.' + month + '.' + year;
         }
@@ -181,70 +180,78 @@
         }
 
         function createThermostatTable(data) {
-            var tableContainer = document.getElementById('thermostatTableContainer');
-            var table = document.createElement('table');
+            var tableContainer = document.getElementById( 'thermostatTableContainer' );
+            var table = document.createElement( 'table' );
             table.className = 'table';
 
             // Erstelle Tabellenkopf
-            var thead = document.createElement('thead');
-            var headerRow = document.createElement('tr');
+            var thead = document.createElement( 'thead' );
+            var headerRow = document.createElement( 'tr' );
             headerRow.style.backgroundColor = 'bg-light'; // Hintergrundfarbe für den Kopf
             headerRow.style.color = 'black'; // Textfarbe für den Kopf
 
             // Füge den Wert von data['Name'] in den Tabellenkopf ein
-            var nameHeader = document.createElement('th');
+            var nameHeader = document.createElement( 'th' );
             nameHeader.textContent = 'Name';
-            headerRow.appendChild(nameHeader);
+            headerRow.appendChild( nameHeader );
 
             // Füge die übrigen Spaltenüberschriften hinzu
-            Object.keys(data[0]).forEach(function (key, index) {
-                if (key !== 'Name') {
-                    var th = document.createElement('th');
+            Object.keys( data[0] ).forEach( function (key, index) {
+                if ( key !== 'Name' ) {
+                    var th = document.createElement( 'th' );
                     th.textContent = key;
-                    headerRow.appendChild(th);
+                    headerRow.appendChild( th );
                 }
-            });
+            } );
 
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
+            thead.appendChild( headerRow );
+            table.appendChild( thead );
 
             // Erstelle Tabellenkörper (Werte)
-            var tbody = document.createElement('tbody');
-            data.forEach(function (item) {
-                var row = document.createElement('tr');
-                Object.keys(item).forEach(function (key, index) {
-                    var valueCell = document.createElement('td');
+            var tbody = document.createElement( 'tbody' );
+            data.forEach( function (item) {
+                var row = document.createElement( 'tr' );
+                Object.keys( item ).forEach( function (key, index) {
+                    var valueCell = document.createElement( 'td' );
                     valueCell.textContent = item[key];
-                    row.appendChild(valueCell);
-                });
-                tbody.appendChild(row);
-            });
-            table.appendChild(tbody);
+                    row.appendChild( valueCell );
+                } );
+                tbody.appendChild( row );
+            } );
+            table.appendChild( tbody );
 
-            tableContainer.appendChild(table);
+            tableContainer.appendChild( table );
         }
+
         // Die Funktion fetch wird durch eine XMLHttpRequest ersetzt
         function fetch(url) {
-            return new Promise(function (resolve, reject) {
+            return new Promise( function (resolve, reject) {
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET', url);
+                xhr.open( 'GET', url );
                 xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        resolve(JSON.parse(xhr.responseText));
+                    if ( xhr.status === 200 ) {
+                        resolve( JSON.parse( xhr.responseText ) );
                     } else {
-                        reject('Error: ' + xhr.status);
+                        reject( 'Error: ' + xhr.status );
                     }
                 };
                 xhr.onerror = function () {
-                    reject('Network error');
+                    reject( 'Network error' );
                 };
                 xhr.send();
-            });
+            } );
         }
 
         // Die forEach-Methode wird durch eine herkömmliche for-Schleife ersetzt
         function createThermostatTable(data) {
             var tableContainer = document.getElementById('thermostatTableContainer');
+
+            // Überprüfe, ob bereits ein Table-Element im Container vorhanden ist
+            var existingTable = tableContainer.querySelector('table');
+            if (existingTable) {
+                existingTable.parentNode.removeChild(existingTable); // Entferne das vorhandene Table-Element
+            }
+
             var table = document.createElement('table');
             table.className = 'table';
 
@@ -289,26 +296,29 @@
 
             tableContainer.appendChild(table);
         }
+
+
+
         // Statt async/await werden herkömmliche Promise-Methoden verwendet
         function setSwitchInfo() {
             addSwitchSpinner();
-            var switchId = document.getElementById('switchIdInput').value;
+            var switchId = document.getElementById( 'switchIdInput' ).value;
 
-            fetch('/switches/' + switchId + '/')
-                .then(function (response) {
+            fetch( '/switches/' + switchId + '/' )
+                .then( function (response) {
 
-                    var statusCodeDiv = document.getElementById('status-code-switch');
+                    var statusCodeDiv = document.getElementById( 'status-code-switch' );
                     statusCodeDiv.innerText = 'Status Code: ' + response.status;
 
                     return response;
-                })
-                .then(function (data) {
-                    var nameSpan = document.querySelector('#nameSpan');
-                    var temperatureSpan = document.querySelector('#temperatureSpan');
-                    var powerSpan = document.querySelector('#powerSpan');
-                    var energySpan = document.querySelector('#energySpan');
-                    var toggleSwitch = document.querySelector('#toggleSwitch');
-                    var presenceSpan = document.querySelector('#presenceSpan');
+                } )
+                .then( function (data) {
+                    var nameSpan = document.querySelector( '#nameSpan' );
+                    var temperatureSpan = document.querySelector( '#temperatureSpan' );
+                    var powerSpan = document.querySelector( '#powerSpan' );
+                    var energySpan = document.querySelector( '#energySpan' );
+                    var toggleSwitch = document.querySelector( '#toggleSwitch' );
+                    var presenceSpan = document.querySelector( '#presenceSpan' );
 
                     nameSpan.textContent = data.name;
                     temperatureSpan.textContent = data.temperature + '°C';
@@ -317,114 +327,135 @@
                     presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
 
                     var energy = data.energy.toString();
-                    energy = energy.substring(0, energy.length - 3) + ',' + energy.substring(energy.length - 3);
+                    energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 );
                     energySpan.textContent = energy + ' kWh';
 
-                    var responseBodyDiv = document.getElementById('response-body-switch');
-                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
-                })
-                .catch(function (error) {
-                    console.error(error);
-                    document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
-                    document.getElementById('response-body-switch').innerText = error;
-                })
-                .finally(function () {
+                    var responseBodyDiv = document.getElementById( 'response-body-switch' );
+                    responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
+                } )
+                .catch( function (error) {
+                    console.error( error );
+                    document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-switch' ).innerText = error;
+                } )
+                .finally( function () {
                     removeSwitchSpinner();
-                    setLastUpdate('#lastSwitchUpdate');
-                });
+                    setLastUpdate( '#lastSwitchUpdate' );
+                } );
         }
 
         // Statt async/await werden herkömmliche Promise-Methoden verwendet
         function getThermostatIds() {
-            return fetch('/thermostat')
-                .then(function (response) {
+            return fetch( '/thermostat' )
+                .then( function (response) {
 
-                    console.log(response)
+                    console.log( response )
                     return response;
-                })
-                .catch(function (error) {
-                    console.error(error);
-                    document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
-                    document.getElementById('response-body-temperature').innerText = error;
+                } )
+                .catch( function (error) {
+                    console.error( error );
+                    document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-temperature' ).innerText = error;
                     return [];
-                });
+                } );
         }
 
         function fetchThermostatData(id) {
-            return fetch('/thermostat/' + id)
-                .then(function (response) {
+            return fetch( '/thermostat/' + id )
+                .then( function (response) {
                     return response;
-                })
-                .catch(function (error) {
+                } )
+                .catch( function (error) {
 
-                    document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
-                    document.getElementById('response-body-temperature').innerText = error;
-                    console.error(error);
+                    document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-temperature' ).innerText = error;
+                    console.error( error );
                     return null;
-                });
+                } );
         }
 
         function fetchAllThermostatData(ids) {
-            var promises = ids.map(function (id) {
-                return fetchThermostatData(id);
-            });
+            var promises = ids.map( function (id) {
+                return fetchThermostatData( id );
+            } );
 
-            return Promise.all(promises)
-                .then(function (responses) {
+            return Promise.all( promises )
+                .then( function (responses) {
                     var formattedDataArray = [];
-                    responses.forEach(function (res) {
-                        if (res !== null) {
-                            var data = formatData(res);
-                            formattedDataArray.push(data);
+                    responses.forEach( function (res) {
+                        if ( res !== null ) {
+                            var data = formatData( res );
+                            formattedDataArray.push( data );
                         }
-                    });
+                    } );
                     return formattedDataArray;
-                });
+                } );
         }
 
         function getThermostats() {
             addThermostatSpinner();
             getThermostatIds()
-                .then(function (thermostatIds) {
-                    fetchAllThermostatData(thermostatIds)
-                        .then(function (data) {
-                            createThermostatTable(data);
-                        })
-                        .catch(function (error) {
-                            console.error('Fehler beim Abrufen der Daten:', error);
+                .then( function (thermostatIds) {
+                    fetchAllThermostatData( thermostatIds )
+                        .then( function (data) {
+                            createThermostatTable( data );
+
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('POST', '/thermostat/setLastResponse');
+                            xhr.setRequestHeader('Content-Type', 'application/json'); // Setze den Content-Type-Header
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    console.log(xhr.responseText);
+                                } else {
+                                    console.log('Error: ' + xhr.status);
+                                }
+                            };
+                            xhr.onerror = function () {
+                                console.log('Network error');
+                            };
+                            xhr.send(JSON.stringify(data)); // Sende die Daten als JSON-String
+                        } )
+                        .catch( function (error) {
+                            console.error( 'Fehler beim Abrufen der Daten:', error );
 
 
-                            document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
-                            document.getElementById('response-body-temperature').innerText = error;
-                        })
-                        .finally(function () {
+                            document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
+                            document.getElementById( 'response-body-temperature' ).innerText = error;
+                        } )
+                        .finally( function () {
                             removeThermostatSpinner();
-                            setLastUpdate('#lastThermostatUpdate');
-                        });
-                });
+                            setLastUpdate( '#lastThermostatUpdate' );
+                        } );
+                } );
         }
+
+        function getLastThermostatResponse() {
+            fetch( '/thermostat/lastResponse' )
+                .then( function (response) {
+                    var statusCodeDiv = document.getElementById( 'status-code-switch' );
+                    statusCodeDiv.innerText = 'Status Code: ' + response.status;
+
+                    console.log(response)
+                    createThermostatTable( response );
+                } )
+                .catch( function (error) {
+                    console.error( error );
+                    document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                    document.getElementById( 'response-body-switch' ).innerText = error;
+                } );
+        }
+
 
         function updateStats() {
-            Promise.all([
-                setSwitchInfo(),
-                getThermostats()
-            ]);
-        }
-
-        // Funktion für das periodische Überprüfen und Aktualisieren der Statistiken
-        function scheduleUpdate() {
-            // Zuerst die Statistiken manuell aktualisieren, um sicherzustellen, dass sie sofort angezeigt werden
-            updateStats();
-
-            // Die Überprüfung und Aktualisierung alle 1 Stunde planen
-            setInterval(function () {
-                checkAndUpdateStats();
-            }, 60 * 60 * 1000);
+            return Promise.all( [
+                getLastThermostatResponse(),
+                setSwitchInfo()
+            ] );
         }
 
         // Das Laden der Seite startet die Aktualisierung der Statistiken
-        window.onload = function () {
-            scheduleUpdate();
+        window.onload = async function () {
+            await updateStats();
         };
 
 
@@ -434,21 +465,20 @@
 <div class="container">
     <h3 class="mt-4">Willkommen zur Fritz!Box REST API</h3>
 
-    <button onclick="updateStats()"
-            class="btn btn-primary btn-block mb-3">Aktualisiere die Werte
-    </button>
-
     <div class="container mb-5">
         <div class="row">
 
             <div class="col-4">
-                <h2 class="mt-4">Schalter für Steckdose</h2>
+                <h2 class="mt-4">Schalter für Hausmusik</h2>
+                <button onclick="setSwitchInfo()"
+                        class="btn btn-primary btn-block mb-3">Aktualisieren
+                </button>
                 <div class="card mb-3" id="switchCard" style="position: relative">
 
                     <div id="switchSpinner" class="spinner-border text-primary" role="status" style="
                     z-index: 5;
                     position: absolute;
-                    display: block;
+                    display: none;
                     top: 50%;
                     left: 50%;">
                         <span class="sr-only">Loading...</span>
@@ -490,7 +520,9 @@
                             <span id="presenceSpan" class="text-muted">-</span>
                         </li>
                     </ul>
-                    <p class="card-text text-right mt-3 pr-3 pb-1"><small class="text-muted"><i class="text-muted" id="lastSwitchUpdate"></i></small></p>
+                    <p class="card-text text-right mt-3 pr-3 pb-1"><small class="text-muted"><i class="text-muted"
+                                                                                                id="lastSwitchUpdate"></i></small>
+                    </p>
                 </div>
                 <div class="shadow mb-4 btn-group d-flex flex-wrap justify-content-between">
                     <button id="switchBtnOn" onclick="switchToggle(true)" class="btn btn-success">Switch On</button>
@@ -500,18 +532,23 @@
             <div class="col-8">
 
                 <h2 class="mt-4">Thermostat</h2>
+                <button onclick="getThermostats()"
+                        class="btn btn-primary btn-block mb-3">Aktualisieren
+                </button>
                 <div class="card mb-3" style="position: relative; height: 22.75rem;">
 
                     <div id="thermostatSpinner" class="spinner-border text-primary" role="status" style="
                     z-index: 5;
                     position: absolute;
-                    display: block;
+                    display: none;
                     top: 50%;
                     left: 50%;">
                         <span class="sr-only">Loading...</span>
                     </div>
                     <div id="thermostatTableContainer"></div>
-                    <p class="card-text text-right mt-auto pr-3 pb-1"><small class="text-muted"><i class="text-muted" id="lastThermostatUpdate"></i></small></p>
+                    <p class="card-text text-right mt-auto pr-3 pb-1"><small class="text-muted"><i class="text-muted"
+                                                                                                   id="lastThermostatUpdate"></i></small>
+                    </p>
                 </div>
             </div>
         </div>
@@ -519,8 +556,8 @@
 
 
     <hr>
-<br>
-<br>
+    <br>
+    <br>
 
     <div class="container mt-5">
         <div class="row">

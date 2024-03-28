@@ -7,13 +7,29 @@ require( 'dotenv' ).config();
 var Fritz = require( 'fritzapi' ).Fritz;
 var f = new Fritz( process.env.FRITZ_USER, process.env.FRITZ_PW, "http://fritz.box" );
 
-router.use((req, res, next) => {
-    console.log(`${new Date().toLocaleString()} - Route ${req.originalUrl} wurde aufgerufen`);
+let lastResponse = [
+    { name: "Bitte Aktualisieren", currentTemp: "21", comfortTemp: "22", nightTemp: "18", targetTemp: "21", windowStatus: "Geschlossen", batteryCharge: "80" },
+    { name: "Bitte Aktualisieren", currentTemp: "20", comfortTemp: "22", nightTemp: "17", targetTemp: "20", windowStatus: "Geöffnet", batteryCharge: "70" },
+];
+
+
+router.use( (req, res, next) => {
+    console.log( `${new Date().toLocaleString()} - Route ${req.originalUrl} wurde aufgerufen` );
     next();
+} );
+
+
+router.get( '/lastResponse', async (req, res) => {
+    res.json( lastResponse );
+} );
+router.post('/setLastResponse', (req, res) => {
+    const newResponse = req.body;
+    lastResponse = newResponse;
+    res.status(200).send('Last response updated successfully.');
 });
 
 // Get thermostat list (polyfill)
-router.get( '/', async ( req, res ) => {
+router.get( '/', async (req, res) => {
     try {
         const thermostatList = await f.getThermostatList();
         res.json( thermostatList );
@@ -24,7 +40,7 @@ router.get( '/', async ( req, res ) => {
 } );
 
 // Route for getting the state
-router.get( '/:id', async ( req, res ) => {
+router.get( '/:id', async (req, res) => {
     const id = req.params.id;
     try {
         const [
@@ -35,15 +51,15 @@ router.get( '/:id', async ( req, res ) => {
             nightTemp,
             batteryCharge,
             windowOpen
-        ] = await Promise.all([
-            f.getTemperature(id),
-            f.getTempTarget(id),
-            f.getThermostatName(id),
-            f.getTempComfort(id),
-            f.getTempNight(id),
-            f.getBatteryCharge(id),
-            f.getWindowOpen(id)
-        ]);
+        ] = await Promise.all( [
+            f.getTemperature( id ),
+            f.getTempTarget( id ),
+            f.getThermostatName( id ),
+            f.getTempComfort( id ),
+            f.getTempNight( id ),
+            f.getBatteryCharge( id ),
+            f.getWindowOpen( id )
+        ] );
 
         const response = {
             sessionId: f.getSID(),
@@ -55,6 +71,7 @@ router.get( '/:id', async ( req, res ) => {
             windowOpen,
             batteryCharge
         };
+
         res.json( response );
     } catch ( error ) {
         console.error( error );
@@ -63,8 +80,9 @@ router.get( '/:id', async ( req, res ) => {
 } );
 
 
+
 // Get current temperature
-router.get( '/getCurrentTemp/:id', async ( req, res ) => {
+router.get( '/getCurrentTemp/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const currentTemp = await f.getTemperature( id );
@@ -76,7 +94,7 @@ router.get( '/getCurrentTemp/:id', async ( req, res ) => {
 } );
 
 // Set target temperature (supports 'ON'/'OFF' to enable/disable thermostat)
-router.get( '/setTargetTemp/:id/:temp', async ( req, res ) => {
+router.get( '/setTargetTemp/:id/:temp', async (req, res) => {
     try {
         const { id, temp } = req.params;
         const result = await f.setTempTarget( id, temp );
@@ -88,7 +106,7 @@ router.get( '/setTargetTemp/:id/:temp', async ( req, res ) => {
 } );
 
 // Get target temperature
-router.get( '/getTargetTemp/:id', async ( req, res ) => {
+router.get( '/getTargetTemp/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const targetTemp = await f.getTempTarget( id );
@@ -100,7 +118,7 @@ router.get( '/getTargetTemp/:id', async ( req, res ) => {
 } );
 
 // Get comfort temperature
-router.get( '/getComfortTemp/:id', async ( req, res ) => {
+router.get( '/getComfortTemp/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const comfortTemp = await f.getTempComfort( id );
@@ -112,7 +130,7 @@ router.get( '/getComfortTemp/:id', async ( req, res ) => {
 } );
 
 // Get night temperature
-router.get( '/getNightTemp/:id', async ( req, res ) => {
+router.get( '/getNightTemp/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const nightTemp = await f.getTempNight( id );
@@ -124,7 +142,7 @@ router.get( '/getNightTemp/:id', async ( req, res ) => {
 } );
 
 // Get battery charge (uses UI scraping, may be unstable)
-router.get( '/getBatteryCharge/:id', async ( req, res ) => {
+router.get( '/getBatteryCharge/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const batteryCharge = await f.getBatteryCharge( id );
@@ -136,7 +154,7 @@ router.get( '/getBatteryCharge/:id', async ( req, res ) => {
 } );
 
 // Get window open (uses UI scraping, may be unstable)
-router.get( '/getWindowOpen/:id', async ( req, res ) => {
+router.get( '/getWindowOpen/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const windowOpen = await f.getWindowOpen( id );
