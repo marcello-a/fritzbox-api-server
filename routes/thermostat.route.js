@@ -19,6 +19,45 @@ router.get( '/', async ( req, res ) => {
     }
 } );
 
+// Route for getting the state
+router.get( '/:id', async ( req, res ) => {
+    const switchId = req.params.id;
+    try {
+        const [
+            currentTemp,
+            targetTemp,
+            name,
+            comfortTemp,
+            nightTemp,
+            batteryCharge,
+            windowOpen
+        ] = await Promise.all([
+            f.getTemperature(id),
+            f.getTempTarget(id),
+            f.getThermostatName(id),
+            f.getTempComfort(id),
+            f.getTempNight(id),
+            f.getBatteryCharge(id),
+            f.getWindowOpen(id)
+        ]);
+
+        const response = {
+            sessionId: f.getSID(),
+            name,
+            currentTemp,
+            comfortTemp,
+            nightTemp,
+            targetTemp,
+            windowOpen,
+            batteryCharge
+        };
+        res.json( response );
+    } catch ( error ) {
+        console.error( error );
+        res.status( 500 ).send( `Error retrieving all states of switch ${switchId}` );
+    }
+} );
+
 
 // Get current temperature
 router.get( '/getCurrentTemp/:id', async ( req, res ) => {

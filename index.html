@@ -135,6 +135,51 @@
             }
         }
 
+
+        async function setSwitchInfo() {
+            const switchId = document.getElementById( 'switchIdInput' ).value;
+
+            try {
+                const response = await fetch( `/switches/${switchId}/` );
+                const data = await response.json();
+
+                console.log( 'res', response )
+                console.log( 'data', data )
+
+                // Zugriff auf die span-Elemente
+                const nameSpan = document.querySelector( '#nameSpan' );
+                const temperatureSpan = document.querySelector( '#temperatureSpan' );
+                const powerSpan = document.querySelector( '#powerSpan' );
+                const energySpan = document.querySelector( '#energySpan' );
+                const toggleSwitch = document.querySelector( '#toggleSwitch' );
+                const presenceSpan = document.querySelector( '#presenceSpan' );
+
+                // Setzen der Werte aus dem Response
+                nameSpan.textContent = data.name;
+                temperatureSpan.textContent = data.temperature + '°C';
+                toggleSwitch.checked = !data.status;
+                powerSpan.textContent = data.power + ' W';
+                presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
+
+                let energy = data.energy.toString(); // Konvertiere den Energieverbrauch in einen String
+                energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 ); // Füge das Komma ein
+                energySpan.textContent = energy + ' kWh';
+
+
+                // Display the status code
+                const statusCodeDiv = document.getElementById( 'status-code-switch' );
+                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+
+                // Display the JSON response body
+                const responseBodyDiv = document.getElementById( 'response-body-switch' );
+                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
+            } catch ( error ) {
+                console.error( error );
+                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
+                document.getElementById( 'response-body-switch' ).innerText = error;
+            }
+        }
+
         window.onload = async function () {
             // await setSwitchInfo();
         };
@@ -169,13 +214,12 @@ Accordion mit debug info
                 <h2 class="mt-4">Schalter für Steckdose</h2>
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Schalter Informationen</h5>
                         <div class="row">
                             <div class="col">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Name:
-                                        <span id="nameSpan" class="text-muted"></span>
+                                        <span id="nameSpan" class="text-muted">-</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Zustand:
@@ -185,7 +229,8 @@ Accordion mit debug info
                                             <div class="mr-2">Aus</div>
                                             <div class="custom-control custom-switch">
                                                 <input type="checkbox" class="custom-control-input" id="toggleSwitch">
-                                                <label class="custom-control-label" for="toggleSwitch" style="width: 100%;">
+                                                <label class="custom-control-label" for="toggleSwitch"
+                                                       style="width: 100%;">
                                                     An
                                                 </label>
                                             </div>
@@ -193,19 +238,19 @@ Accordion mit debug info
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Temperature:
-                                        <span id="temperatureSpan" class="text-muted"></span>
+                                        <span id="temperatureSpan" class="text-muted">-</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Stromverbrauch:
-                                        <span id="powerSpan" class="text-muted"></span>
+                                        <span id="powerSpan" class="text-muted">-</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Energieverbrauch:
-                                        <span id="energySpan" class="text-muted"></span>
+                                        <span id="energySpan" class="text-muted">-</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Präsenz:
-                                        <span id="presenceSpan" class="text-muted"></span>
+                                        <span id="presenceSpan" class="text-muted">-</span>
                                     </li>
                                 </ul>
                             </div>
@@ -220,24 +265,30 @@ Accordion mit debug info
             <div class="col">
 
                 <h2 class="mt-4">Thermostat</h2>
-
-                <div class="card">
-                    <div class="card-header">
-                        Thermostat - <span id="thermostat-name">Wohnzimmer</span>
-                    </div>
+                <div class="card mb-3">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Aktuelle Temperatur: <span id="current-temp">21°C</span></li>
-                        <li class="list-group-item">Komforttemperatur: <span id="comfort-temp">22°C</span></li>
-                        <li class="list-group-item">Nachttemperatur: <span id="night-temp">18°C</span></li>
-                        <li class="list-group-item">Zieltemperatur: <span id="target-temp">21°C</span></li>
-                        <li class="list-group-item">Fenster: <span id="window-status">Geschlossen</span></li>
-                        <li class="list-group-item">
-                            Batterieladung: <span id="battery-charge">80%</span>
-                            <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Ort: <span
+                                id="ort-temp">Wohnzimmer?</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Aktuelle
+                            Temperatur: <span id="current-temp">-</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Komforttemperatur:
+                            <span id="comfort-temp">-</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Nachttemperatur:
+                            <span id="night-temp">-</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Zieltemperatur:
+                            <span id="target-temp">-</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">Fenster: <span
+                                id="window-status">-</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Batterieladung:
+                            <div>
+                                <span id="battery-charge">-</span>
+                                <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
+                            </div>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             Gerätestatus:
-                            <span class="status-indicator connected"></span> Verbunden
+                            <span class="status-indicator connected">-</span>
                             <!-- Use "disconnected" class for a disconnected status -->
                         </li>
                     </ul>
@@ -256,13 +307,15 @@ Accordion mit debug info
                 <h2>Schalter</h2>
                 <div id="accordion">
                     <div class="card">
-                        <div class="card-header btn" id="headingTwo" data-toggle="collapse show" data-target="#collapseTwo"
+                        <div class="card-header btn" id="headingTwo" data-toggle="collapse show"
+                             data-target="#collapseTwo"
                              aria-expanded="true" aria-controls="collapseTwo">
                             <h5 class="mb-0">
-                                Schalter ID
+                                Schalter ID (AINS)
                             </h5>
                         </div>
-                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                             data-parent="#accordion">
                             <div class="card-body">
                                 <!-- Input field for Switch ID -->
                                 <div class="form-group">
@@ -336,7 +389,7 @@ Accordion mit debug info
                              data-target="#collapseThermostatOne"
                              aria-expanded="true" aria-controls="collapseThermostatOne">
                             <h5 class="mb-0">
-                                Thermostat ID
+                                Thermostat ID (AINS)
                             </h5>
                         </div>
 
@@ -356,13 +409,15 @@ Accordion mit debug info
                     </div>
 
                     <div class="card">
-                        <div class="card-header btn" id="headingThermostatTwo" data-toggle="collapse" data-target="#collapseThermostatTwo"
+                        <div class="card-header btn" id="headingThermostatTwo" data-toggle="collapse"
+                             data-target="#collapseThermostatTwo"
                              aria-expanded="true" aria-controls="collapseThermostatTwo">
                             <h5 class="mb-0">
                                 Technische Details
                             </h5>
                         </div>
-                        <div id="collapseThermostatTwo" class="collapse" aria-labelledby="headingThermostatTwo" data-parent="#accordion2">
+                        <div id="collapseThermostatTwo" class="collapse" aria-labelledby="headingThermostatTwo"
+                             data-parent="#accordion2">
                             <div class="card-body">
                                 <!-- Display the status code and JSON response here -->
                                 <div class="mt-4">
@@ -380,31 +435,31 @@ Accordion mit debug info
                                         <div class="col-md-12">
                                             <!-- Buttons for different actions -->
                                             <button onclick="handleThermostatClick('getCurrentTemp')"
-                                                    class="btn btn-outline-primary">Get Current
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Current
                                                 Temperature
                                             </button>
                                             <button onclick="handleThermostatClick('getTargetTemp')"
-                                                    class="btn btn-outline-primary">Get Target
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Target
                                                 Temperature
                                             </button>
                                             <button onclick="handleThermostatClick('getComfortTemp')"
-                                                    class="btn btn-outline-primary">Get Comfort
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Comfort
                                                 Temperature
                                             </button>
                                             <button onclick="handleThermostatClick('getNightTemp')"
-                                                    class="btn btn-outline-primary">Get Night
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Night
                                                 Temperature
                                             </button>
                                             <button onclick="handleThermostatClick('getBatteryCharge')"
-                                                    class="btn btn-outline-primary">Get Battery
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Battery
                                                 Charge
                                             </button>
                                             <button onclick="handleThermostatClick('getWindowOpen')"
-                                                    class="btn btn-outline-primary">Get Window Open
+                                                    class="btn btn-outline-primary btn-block mb-3">Get Window Open
                                                 Status
                                             </button>
                                             <button onclick="handleThermostatClick('setTargetTemp/20')"
-                                                    class="btn btn-success">Set Target Temperature
+                                                    class="btn btn-success btn-block mb-3">Set Target Temperature
                                                 to 20°C
                                             </button>
                                         </div>

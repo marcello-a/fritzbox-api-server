@@ -18,13 +18,23 @@ const getThermostatList = async () => {
 
 const getThermostatInfo = async (id) => {
     try {
-        const currentTemp = await f.getTemperature( id );
-        const targetTemp = await f.getTempTarget( id );
-        const name = await f.getThermostatName( id );
-        const comfortTemp = await f.getTempComfort( id );
-        const nightTemp = await f.getTempNight( id );
-        const batteryCharge = await f.getBatteryCharge( id );
-        const windowOpen = await f.getWindowOpen( id );
+        const [
+            currentTemp,
+            targetTemp,
+            name,
+            comfortTemp,
+            nightTemp,
+            batteryCharge,
+            windowOpen
+        ] = await Promise.all([
+            f.getTemperature(id),
+            f.getTempTarget(id),
+            f.getThermostatName(id),
+            f.getTempComfort(id),
+            f.getTempNight(id),
+            f.getBatteryCharge(id),
+            f.getWindowOpen(id)
+        ]);
 
         const thermostat = new Thermostat( {
             id,
