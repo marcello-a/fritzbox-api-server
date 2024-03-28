@@ -45,6 +45,7 @@ router.get( '/:id', async ( req, res ) => {
             sessionId: f.getSID(),
             switchId: switchId,
             name: name,
+            state: state,
             power: power,
             energy: energy,
             temperature: temperature,

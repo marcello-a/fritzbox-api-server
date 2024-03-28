@@ -23,8 +23,8 @@ app.use( '/switches', switchesRoute );
 app.use( '/thermostat', thermostatRoute );
 
 // Start the server
-app.listen( 3000, '192.168.2.159', () => {
-    console.log( 'Server started on port 192.168.2.159:3000' );
+app.listen( 3003, '192.168.2.159', () => {
+    console.log( 'Server started on port 192.168.2.159:3003' );
 } );
 
 
