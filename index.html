@@ -37,308 +37,381 @@
         }
     </style>
     <script>
-
-        async function handleSwitchClick(action) {
+        function handleSwitchClick(action) {
             addSwitchSpinner();
-            const switchId = action === '' ? '' : '/' + document.getElementById( 'switchIdInput' ).value;
+            var switchId = action === '' ? '' : '/' + document.getElementById('switchIdInput').value;
 
-            try {
-                const response = await fetch( `/switches${switchId}/${action}` );
-                const data = await response.json();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/switches' + switchId + '/' + action, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
 
-                // Display the status code
-                const statusCodeDiv = document.getElementById( 'status-code-switch' );
-                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+                    // Display the status code
+                    var statusCodeDiv = document.getElementById('status-code-switch');
+                    statusCodeDiv.innerText = 'Status Code: ' + xhr.status;
 
-                // Display the JSON response body
-                const responseBodyDiv = document.getElementById( 'response-body-switch' );
-                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
-            } catch ( error ) {
-                console.error( error );
-                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
-                document.getElementById( 'response-body-switch' ).innerText = error;
-            }
-            removeSwitchSpinner();
+                    // Display the JSON response body
+                    var responseBodyDiv = document.getElementById('response-body-switch');
+                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
+                } else {
+                    console.error(xhr.statusText);
+                    document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
+                    document.getElementById('response-body-switch').innerText = xhr.statusText;
+                }
+                removeSwitchSpinner();
+            };
+            xhr.onerror = function() {
+                console.error(xhr.statusText);
+                document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
+                document.getElementById('response-body-switch').innerText = xhr.statusText;
+                removeSwitchSpinner();
+            };
+            xhr.send();
         }
 
-        async function switchToggle(on) {
+        function switchToggle(on) {
             if (on) {
-                await handleSwitchClick('switchOn')
+                handleSwitchClick('switchOn');
             } else {
-                await handleSwitchClick('switchOff')
+                handleSwitchClick('switchOff');
             }
-            await setSwitchInfo();
+            setSwitchInfo();
         }
 
-        async function handleThermostatClick(action) {
+        function handleThermostatClick(action) {
             addThermostatSpinner();
-            const thermostatId = action === '' ? '' : '/' + document.getElementById( 'thermostatIdInput' ).value;
+            var thermostatId = action === '' ? '' : '/' + document.getElementById('thermostatIdInput').value;
 
-            try {
-                const response = await fetch( `/thermostat/${action}${thermostatId}` );
-                const data = await response.json();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/thermostat/' + action + thermostatId, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
 
-                // Display the status code
-                const statusCodeDiv = document.getElementById( 'status-code-temperature' );
-                statusCodeDiv.innerText = `Status Code: ${response.status}`;
+                    // Display the status code
+                    var statusCodeDiv = document.getElementById('status-code-temperature');
+                    statusCodeDiv.innerText = 'Status Code: ' + xhr.status;
 
-                // Display the JSON response body
-                const responseBodyDiv = document.getElementById( 'response-body-temperature' );
-                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
-            } catch ( error ) {
-                console.error( error );
-                document.getElementById( 'status-code-temperature' ).innerText = 'Error occurred. Check console for details.';
-                document.getElementById( 'response-body-temperature' ).innerText = error;
-            }
-            removeThermostatSpinner();
+                    // Display the JSON response body
+                    var responseBodyDiv = document.getElementById('response-body-temperature');
+                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
+                } else {
+                    console.error(xhr.statusText);
+                    document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
+                    document.getElementById('response-body-temperature').innerText = xhr.statusText;
+                }
+                removeThermostatSpinner();
+            };
+            xhr.onerror = function() {
+                console.error(xhr.statusText);
+                document.getElementById('status-code-temperature').innerText = 'Error occurred. Check console for details.';
+                document.getElementById('response-body-temperature').innerText = xhr.statusText;
+                removeThermostatSpinner();
+            };
+            xhr.send();
         }
 
         function addSwitchSpinner() {
-            const switchSpinner = document.getElementById('switchSpinner');
-            const switchCard = document.getElementById('switchCard');
-            const switchBtnOn = document.getElementById('switchBtnOn');
-            const switchBtnOff = document.getElementById('switchBtnOff');
+            var switchSpinner = document.getElementById('switchSpinner');
+            var switchCard = document.getElementById('switchCard');
+            var switchBtnOn = document.getElementById('switchBtnOn');
+            var switchBtnOff = document.getElementById('switchBtnOff');
 
             switchSpinner.style.display = 'block';
-            switchCard.classList.add('text-muted'); // Die Card deaktivieren
-            switchBtnOn.classList.add('disabled'); // Den Schalter-On-Button deaktivieren
-            switchBtnOff.classList.add('disabled'); // Den Schalter-Off-Button deaktivieren
+            switchCard.className += ' text-muted'; // Klassen hinzufügen, um die Card zu deaktivieren
+            switchBtnOn.className += ' disabled'; // Klassen hinzufügen, um den Schalter-On-Button zu deaktivieren
+            switchBtnOff.className += ' disabled'; // Klassen hinzufügen, um den Schalter-Off-Button zu deaktivieren
             switchBtnOn.disabled = true;
             switchBtnOff.disabled = true;
         }
 
         function removeSwitchSpinner() {
-            const switchSpinner = document.getElementById('switchSpinner');
-            const switchCard = document.getElementById('switchCard');
-            const switchBtnOn = document.getElementById('switchBtnOn');
-            const switchBtnOff = document.getElementById('switchBtnOff');
+            var switchSpinner = document.getElementById('switchSpinner');
+            var switchCard = document.getElementById('switchCard');
+            var switchBtnOn = document.getElementById('switchBtnOn');
+            var switchBtnOff = document.getElementById('switchBtnOff');
 
-            switchSpinner.style.display = 'none'; // Den Spinner ausblenden, nachdem die Antwort empfangen wurde
-            switchCard.classList.remove('text-muted'); // Die Card aktivieren
-            switchBtnOn.classList.remove('disabled'); // Den Schalter-On-Button aktivieren
-            switchBtnOff.classList.remove('disabled'); // Den Schalter-Off-Button aktivieren
+            switchSpinner.style.display = 'none';
+            switchCard.className = switchCard.className.replace(/\btext-muted\b/g, ''); // Entfernen der Klasse, um die Card zu aktivieren
+            switchBtnOn.className = switchBtnOn.className.replace(/\bdisabled\b/g, ''); // Entfernen der Klasse, um den Schalter-On-Button zu aktivieren
+            switchBtnOff.className = switchBtnOff.className.replace(/\bdisabled\b/g, ''); // Entfernen der Klasse, um den Schalter-Off-Button zu aktivieren
             switchBtnOn.disabled = false;
             switchBtnOff.disabled = false;
         }
 
         function addThermostatSpinner() {
-            const thermostatSpinner = document.getElementById('thermostatSpinner');
-            const thermostatCard = document.getElementById('thermostatCard');
-
+            var thermostatSpinner = document.getElementById('thermostatSpinner');
             thermostatSpinner.style.display = 'block';
         }
 
         function removeThermostatSpinner() {
-            const thermostatSpinner = document.getElementById('thermostatSpinner');
-            const thermostatCard = document.getElementById('thermostatCard');
-
-            thermostatSpinner.style.display = 'none'; // Den Spinner ausblenden, nachdem die Antwort empfangen wurde
+            var thermostatSpinner = document.getElementById('thermostatSpinner');
+            thermostatSpinner.style.display = 'none';
         }
+
         function setLastUpdate(selector) {
-            const lastUpdateSpan = document.querySelector( selector );
-            const currentDate = new Date();
-            const year = currentDate.getFullYear();
-            const month = String( currentDate.getMonth() + 1 ).padStart( 2, '0' ); // Monat ist nullbasiert, daher +1 und mit führender Null für einstellige Monate
-            const day = String( currentDate.getDate() ).padStart( 2, '0' ); // Führende Null für einstellige Tage
-            const hours = String( currentDate.getHours() ).padStart( 2, '0' ); // Führende Null für einstellige Stunden
-            const minutes = String( currentDate.getMinutes() ).padStart( 2, '0' ); // Führende Null für einstellige Minuten
+            var lastUpdateSpan = document.querySelector(selector);
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Monat ist nullbasiert, daher +1 und mit führender Null für einstellige Monate
+            var day = currentDate.getDate().toString().padStart(2, '0'); // Führende Null für einstellige Tage
+            var hours = currentDate.getHours().toString().padStart(2, '0'); // Führende Null für einstellige Stunden
+            var minutes = currentDate.getMinutes().toString().padStart(2, '0'); // Führende Null für einstellige Minuten
 
-            lastUpdateSpan.innerHTML = `letztes update: ${hours}:${minutes}<br>${day}.${month}.${year}`;
+            lastUpdateSpan.innerHTML = 'letztes update: ' + hours + ':' + minutes + '<br>' + day + '.' + month + '.' + year;
         }
-
-        async function setSwitchInfo() {
-            addSwitchSpinner()
-            const switchId = document.getElementById( 'switchIdInput' ).value;
-
-            try {
-                const response = await fetch( `/switches/${switchId}/` );
-                const data = await response.json();
-
-                // Zugriff auf die span-Elemente
-                const nameSpan = document.querySelector( '#nameSpan' );
-                const temperatureSpan = document.querySelector( '#temperatureSpan' );
-                const powerSpan = document.querySelector( '#powerSpan' );
-                const energySpan = document.querySelector( '#energySpan' );
-                const toggleSwitch = document.querySelector( '#toggleSwitch' );
-                const presenceSpan = document.querySelector( '#presenceSpan' );
-
-                // Setzen der Werte aus dem Response
-                nameSpan.textContent = data.name;
-                temperatureSpan.textContent = data.temperature + '°C';
-                toggleSwitch.checked = data.state;
-                powerSpan.textContent = data.power + ' W';
-                presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
-
-                let energy = data.energy.toString(); // Konvertiere den Energieverbrauch in einen String
-                energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 ); // Füge das Komma ein
-                energySpan.textContent = energy + ' kWh';
-
-
-                // Display the status code
-                const statusCodeDiv = document.getElementById( 'status-code-switch' );
-                statusCodeDiv.innerText = `Status Code: ${response.status}`;
-
-                // Display the JSON response body
-                const responseBodyDiv = document.getElementById( 'response-body-switch' );
-                responseBodyDiv.innerText = JSON.stringify( data, null, 2 );
-
-                setLastUpdate( '#lastSwitchUpdate' )
-            } catch ( error ) {
-                console.error( error );
-                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
-                document.getElementById( 'response-body-switch' ).innerText = error;
-            }
-
-            removeSwitchSpinner();
-        }
-
 
         function formatData(data) {
             return {
-                Name: `${data.name}`,
-                Aktuell: `${data.currentTemp}°C`,
-                Ziel: `${data.targetTemp}°C`,
-                Komfort: `${data.comfortTemp}°C`,
-                Nacht: `${data.nightTemp}°C`,
-                Battery: `${data.batteryCharge}%`
+                Name: data.name,
+                Aktuell: data.currentTemp + '°C',
+                Ziel: data.targetTemp + '°C',
+                Komfort: data.comfortTemp + '°C',
+                Nacht: data.nightTemp + '°C',
+                Battery: data.batteryCharge + '%'
             };
         }
 
-        // Funktion zum Erstellen der Thermostat-Tabelle
         function createThermostatTable(data) {
-            const tableContainer = document.getElementById( 'thermostatTableContainer' );
-            const table = document.createElement( 'table' );
-            table.classList.add( 'table' );
-
-            // Bestimme den Index des Namenschlüssels in der Objektschlüsselreihenfolge
-            const nameIndex = Object.keys( data[0] ).indexOf( 'Name' );
+            var tableContainer = document.getElementById('thermostatTableContainer');
+            var table = document.createElement('table');
+            table.className = 'table';
 
             // Erstelle Tabellenkopf
-            const thead = document.createElement( 'thead' );
-            const headerRow = document.createElement( 'tr' );
+            var thead = document.createElement('thead');
+            var headerRow = document.createElement('tr');
             headerRow.style.backgroundColor = 'bg-light'; // Hintergrundfarbe für den Kopf
             headerRow.style.color = 'black'; // Textfarbe für den Kopf
 
             // Füge den Wert von data['Name'] in den Tabellenkopf ein
-            const nameHeader = document.createElement( 'th' );
+            var nameHeader = document.createElement('th');
             nameHeader.textContent = 'Name';
-            headerRow.appendChild( nameHeader );
+            headerRow.appendChild(nameHeader);
 
             // Füge die übrigen Spaltenüberschriften hinzu
-            Object.keys( data[0] ).forEach( (key, index) => {
-                if ( index !== nameIndex ) {
-                    const th = document.createElement( 'th' );
+            Object.keys(data[0]).forEach(function (key, index) {
+                if (key !== 'Name') {
+                    var th = document.createElement('th');
                     th.textContent = key;
-                    headerRow.appendChild( th );
+                    headerRow.appendChild(th);
                 }
-            } );
+            });
 
-            thead.appendChild( headerRow );
-            table.appendChild( thead );
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
 
             // Erstelle Tabellenkörper (Werte)
-            const tbody = document.createElement( 'tbody' );
-            data.forEach( item => {
-                const row = document.createElement( 'tr' );
-                Object.keys( item ).forEach( (key, index) => {
-                    const valueCell = document.createElement( 'td' );
+            var tbody = document.createElement('tbody');
+            data.forEach(function (item) {
+                var row = document.createElement('tr');
+                Object.keys(item).forEach(function (key, index) {
+                    var valueCell = document.createElement('td');
                     valueCell.textContent = item[key];
-                    row.appendChild( valueCell );
-                } );
-                tbody.appendChild( row );
-            } );
-            table.appendChild( tbody );
+                    row.appendChild(valueCell);
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
 
-            tableContainer.appendChild( table );
+            tableContainer.appendChild(table);
+        }
+        // Die Funktion fetch wird durch eine XMLHttpRequest ersetzt
+        function fetch(url) {
+            return new Promise(function (resolve, reject) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        reject('Error: ' + xhr.status);
+                    }
+                };
+                xhr.onerror = function () {
+                    reject('Network error');
+                };
+                xhr.send();
+            });
         }
 
+        // Die forEach-Methode wird durch eine herkömmliche for-Schleife ersetzt
+        function createThermostatTable(data) {
+            var tableContainer = document.getElementById('thermostatTableContainer');
+            var table = document.createElement('table');
+            table.className = 'table';
 
-        async function getThermostatIds() {
-            try {
-                const response = await fetch( `/thermostat` );
-                const data = await response.json();
+            // Erstelle Tabellenkopf
+            var thead = document.createElement('thead');
+            var headerRow = document.createElement('tr');
+            headerRow.style.backgroundColor = 'bg-light'; // Hintergrundfarbe für den Kopf
+            headerRow.style.color = 'black'; // Textfarbe für den Kopf
 
-                return data;
-            } catch ( error ) {
-                console.error( error );
-                document.getElementById( 'status-code-switch' ).innerText = 'Error occurred. Check console for details.';
-                document.getElementById( 'response-body-switch' ).innerText = error;
-            }
-            return [];
-        }
+            // Füge den Wert von data['Name'] in den Tabellenkopf ein
+            var nameHeader = document.createElement('th');
+            nameHeader.textContent = 'Name';
+            headerRow.appendChild(nameHeader);
 
-        async function fetchThermostatData(id) {
-            return await fetch( `/thermostat/${id}` );
-            return response.json();
-        }
-
-        async function fetchAllThermostatData(ids) {
-            const promises = ids.map( id => fetchThermostatData( id ) );
-            const responses = await Promise.all( promises );
-
-            const formattedDataArray = await Promise.all( responses.map( async (res) => {
-                const data = await res.json();
-                return formatData( data );
-            } ) );
-
-            return formattedDataArray;
-        }
-
-        async function getThermostats() {
-            addThermostatSpinner();
-            const thermostatIds = await getThermostatIds();
-
-            const thermostatData = [];
-            try {
-                const data = await fetchAllThermostatData( thermostatIds );
-                // Hier kannst du die erhaltenen Daten weiter verarbeiten
-                thermostatData.push( ...data );
-            } catch ( error ) {
-                console.error( 'Fehler beim Abrufen der Daten:', error );
-            }
-            createThermostatTable( thermostatData );
-            setLastUpdate( '#lastThermostatUpdate' )
-            removeThermostatSpinner();
-        }
-
-        async function updateStats() {
-            await Promise.all( [
-                setSwitchInfo(),
-                getThermostats()
-            ] );
-        }
-
-        function checkAndUpdateStats() {
-            const now = new Date();
-            const day = now.getDay(); // 0 (Sonntag) bis 6 (Samstag)
-            const hour = now.getHours();
-
-            // Zeitplan für Mo-Fr: von 16-20h stündlich
-            if (day >= 1 && day <= 5 && hour >= 16 && hour < 20) {
-                // Aktualisierung stündlich
-                updateStats();
-            }
-            // Zeitplan für Sa-So: von 8-20h alle 2 Stunden
-            else if (day === 0 || day === 6) {
-                if (hour >= 8 && hour < 20 && hour % 2 === 0) {
-                    // Aktualisierung alle 2 Stunden
-                    updateStats();
+            // Füge die übrigen Spaltenüberschriften hinzu
+            for (var i = 0; i < Object.keys(data[0]).length; i++) {
+                var key = Object.keys(data[0])[i];
+                if (key !== 'Name') {
+                    var th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
                 }
             }
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Erstelle Tabellenkörper (Werte)
+            var tbody = document.createElement('tbody');
+            for (var j = 0; j < data.length; j++) {
+                var item = data[j];
+                var row = document.createElement('tr');
+                for (var k = 0; k < Object.keys(item).length; k++) {
+                    var itemKey = Object.keys(item)[k];
+                    var valueCell = document.createElement('td');
+                    valueCell.textContent = item[itemKey];
+                    row.appendChild(valueCell);
+                }
+                tbody.appendChild(row);
+            }
+            table.appendChild(tbody);
+
+            tableContainer.appendChild(table);
+        }
+        // Statt async/await werden herkömmliche Promise-Methoden verwendet
+        function setSwitchInfo() {
+            addSwitchSpinner();
+            var switchId = document.getElementById('switchIdInput').value;
+
+            fetch('/switches/' + switchId + '/')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    var nameSpan = document.querySelector('#nameSpan');
+                    var temperatureSpan = document.querySelector('#temperatureSpan');
+                    var powerSpan = document.querySelector('#powerSpan');
+                    var energySpan = document.querySelector('#energySpan');
+                    var toggleSwitch = document.querySelector('#toggleSwitch');
+                    var presenceSpan = document.querySelector('#presenceSpan');
+
+                    nameSpan.textContent = data.name;
+                    temperatureSpan.textContent = data.temperature + '°C';
+                    toggleSwitch.checked = data.state;
+                    powerSpan.textContent = data.power + ' W';
+                    presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
+
+                    var energy = data.energy.toString();
+                    energy = energy.substring(0, energy.length - 3) + ',' + energy.substring(energy.length - 3);
+                    energySpan.textContent = energy + ' kWh';
+
+                    var statusCodeDiv = document.getElementById('status-code-switch');
+                    statusCodeDiv.innerText = 'Status Code: ' + response.status;
+
+                    var responseBodyDiv = document.getElementById('response-body-switch');
+                    responseBodyDiv.innerText = JSON.stringify(data, null, 2);
+
+                    setLastUpdate('#lastSwitchUpdate');
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
+                    document.getElementById('response-body-switch').innerText = error;
+                })
+                .finally(function () {
+                    removeSwitchSpinner();
+                });
         }
 
-        // Funktion zum periodischen Überprüfen und Aktualisieren der Statistiken
+        // Statt async/await werden herkömmliche Promise-Methoden verwendet
+        function getThermostatIds() {
+            return fetch('/thermostat')
+                .then(function (response) {
+                    return response.json();
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    document.getElementById('status-code-switch').innerText = 'Error occurred. Check console for details.';
+                    document.getElementById('response-body-switch').innerText = error;
+                    return [];
+                });
+        }
+
+        function fetchThermostatData(id) {
+            return fetch('/thermostat/' + id)
+                .then(function (response) {
+                    return response.json();
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    return null;
+                });
+        }
+
+        function fetchAllThermostatData(ids) {
+            var promises = ids.map(function (id) {
+                return fetchThermostatData(id);
+            });
+
+            return Promise.all(promises)
+                .then(function (responses) {
+                    var formattedDataArray = [];
+                    responses.forEach(function (res) {
+                        if (res !== null) {
+                            var data = formatData(res);
+                            formattedDataArray.push(data);
+                        }
+                    });
+                    return formattedDataArray;
+                });
+        }
+
+        function getThermostats() {
+            addThermostatSpinner();
+            getThermostatIds()
+                .then(function (thermostatIds) {
+                    fetchAllThermostatData(thermostatIds)
+                        .then(function (data) {
+                            createThermostatTable(data);
+                            setLastUpdate('#lastThermostatUpdate');
+                        })
+                        .catch(function (error) {
+                            console.error('Fehler beim Abrufen der Daten:', error);
+                        })
+                        .finally(function () {
+                            removeThermostatSpinner();
+                        });
+                });
+        }
+
+        function updateStats() {
+            Promise.all([
+                setSwitchInfo(),
+                getThermostats()
+            ]);
+        }
+
+        // Funktion für das periodische Überprüfen und Aktualisieren der Statistiken
         function scheduleUpdate() {
-            // Rufen Sie die Funktion zuerst manuell auf, um sicherzustellen, dass die Statistiken sofort aktualisiert werden
+            // Zuerst die Statistiken manuell aktualisieren, um sicherzustellen, dass sie sofort angezeigt werden
             updateStats();
 
-            // Schedule-Funktion periodisch aufrufen
-            setInterval(checkAndUpdateStats, 60 * 60 * 1000); // Überprüfung alle 1 Stunde
+            // Die Überprüfung und Aktualisierung alle 1 Stunde planen
+            setInterval(function () {
+                checkAndUpdateStats();
+            }, 60 * 60 * 1000);
         }
 
+        // Das Laden der Seite startet die Aktualisierung der Statistiken
         window.onload = function () {
             scheduleUpdate();
         };
+
+
     </script>
 </head>
 <body>
