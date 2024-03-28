@@ -50,7 +50,6 @@ router.get( '/:id', async (req, res) => {
             comfortTemp,
             nightTemp,
             batteryCharge,
-            windowOpen
         ] = await Promise.all( [
             f.getTemperature( id ),
             f.getTempTarget( id ),
@@ -58,7 +57,6 @@ router.get( '/:id', async (req, res) => {
             f.getTempComfort( id ),
             f.getTempNight( id ),
             f.getBatteryCharge( id ),
-            f.getWindowOpen( id )
         ] );
 
         const response = {
@@ -68,7 +66,6 @@ router.get( '/:id', async (req, res) => {
             comfortTemp,
             nightTemp,
             targetTemp,
-            windowOpen,
             batteryCharge
         };
 
