@@ -188,11 +188,11 @@
             await Promise.all( [
                 setSwitchInfo(),
                 setTemperaturInfo()
-            ]);
+            ] );
         }
 
         window.onload = async function () {
-            await updateStats();
+            // await updateStats();
         };
     </script>
 </head>
@@ -218,55 +218,53 @@ Accordion mit debug info
 <div class="container">
     <h1 class="mt-4">Welcome to Fritz!Box REST API</h1>
 
+    <button onclick="updateStats()"
+            class="btn btn-primary btn-block mb-3">Update
+    </button>
+
     <div class="container mb-5">
         <div class="row">
             <div class="col">
 
                 <h2 class="mt-4">Schalter für Steckdose</h2>
                 <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Name:
-                                        <span id="nameSpan" class="text-muted">-</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Zustand:
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Name:
+                            <span id="nameSpan" class="text-muted">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Zustand:
 
-                                        <!--   Status Ansicht (Toggle) -->
-                                        <div class="d-flex">
-                                            <div class="mr-2">Aus</div>
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="toggleSwitch">
-                                                <label class="custom-control-label" for="toggleSwitch"
-                                                       style="width: 100%;">
-                                                    An
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Temperature:
-                                        <span id="temperatureSpan" class="text-muted">-</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Stromverbrauch:
-                                        <span id="powerSpan" class="text-muted">-</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Energieverbrauch:
-                                        <span id="energySpan" class="text-muted">-</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Präsenz:
-                                        <span id="presenceSpan" class="text-muted">-</span>
-                                    </li>
-                                </ul>
+                            <!--   Status Ansicht (Toggle) -->
+                            <div class="d-flex">
+                                <div class="mr-2">Aus</div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="toggleSwitch">
+                                    <label class="custom-control-label" for="toggleSwitch"
+                                           style="width: 100%;">
+                                        An
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Temperature:
+                            <span id="temperatureSpan" class="text-muted">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Stromverbrauch:
+                            <span id="powerSpan" class="text-muted">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Energieverbrauch:
+                            <span id="energySpan" class="text-muted">-</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Präsenz:
+                            <span id="presenceSpan" class="text-muted">-</span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="shadow mb-4 btn-group d-flex flex-wrap justify-content-between">
                     <button onclick="handleSwitchClick('switchOn')" class="btn btn-success">Switch On</button>
@@ -282,11 +280,14 @@ Accordion mit debug info
                                 id="ortTemp">Wohnzimmer?</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Aktuelle
                             Temperatur: <span id="currentTemp">-</span></li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">Komforttemperatur:
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Komforttemperatur:
                             <span id="comfortTemp">-</span></li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">Nachttemperatur:
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Nachttemperatur:
                             <span id="nightTemp">-</span></li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">Zieltemperatur:
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Zieltemperatur:
                             <span id="targetTemp">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Fenster: <span
                                 id="windowStatus">-</span></li>
@@ -298,6 +299,11 @@ Accordion mit debug info
                             </div>
                         </li>
                     </ul>
+                </div>
+
+                <div class="shadow mb-4 btn-group d-flex flex-wrap justify-content-between">
+                    <button onclick="handleSwitchClick('switchOn')" class="btn btn-success">other 1</button>
+                    <button onclick="handleSwitchClick('switchOff')" class="btn btn-danger">other 2</button>
                 </div>
             </div>
         </div>
