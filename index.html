@@ -60,7 +60,7 @@
         }
 
         async function handleThermostatClick(action) {
-            const thermostatId = document.getElementById( 'thermostatIdInput' ).value;
+            const thermostatId = action === '' ? '' : '/' + document.getElementById( 'thermostatIdInput' ).value;
 
             try {
                 const response = await fetch( `/thermostat/${action}/${thermostatId}` );
@@ -136,8 +136,8 @@
         }
 
 
-        async function setSwitchInfo() {
-            const switchId = document.getElementById( 'switchIdInput' ).value;
+        async function setTemperaturInfo() {
+            const switchId = document.getElementById( 'thermostatIdInput' ).value;
 
             try {
                 const response = await fetch( `/switches/${switchId}/` );
@@ -147,19 +147,24 @@
                 console.log( 'data', data )
 
                 // Zugriff auf die span-Elemente
-                const nameSpan = document.querySelector( '#nameSpan' );
-                const temperatureSpan = document.querySelector( '#temperatureSpan' );
-                const powerSpan = document.querySelector( '#powerSpan' );
-                const energySpan = document.querySelector( '#energySpan' );
-                const toggleSwitch = document.querySelector( '#toggleSwitch' );
-                const presenceSpan = document.querySelector( '#presenceSpan' );
+                const ortTemp = document.querySelector('#ortTemp');
+                const currentTempSpan = document.querySelector('#currentTemp');
+                const comfortTempSpan = document.querySelector('#comfortTemp');
+                const nightTempSpan = document.querySelector('#nightTemp');
+                const targetTempSpan = document.querySelector('#targetTemp');
+                const windowStatusSpan = document.querySelector('#windowStatus');
+                const batteryChargeSpan = document.querySelector('#batteryCharge');
+                const statusIndicator = document.querySelector('#statusIndicator');
 
-                // Setzen der Werte aus dem Response
-                nameSpan.textContent = data.name;
-                temperatureSpan.textContent = data.temperature + '°C';
-                toggleSwitch.checked = !data.status;
-                powerSpan.textContent = data.power + ' W';
-                presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
+                // Setzen der Werte aus dem Response (data)
+                ortTemp.textContent = data.name;
+                currentTempSpan.textContent = data.currentTemp + '°C';
+                comfortTempSpan.textContent = data.comfortTemp + '°C';
+                nightTempSpan.textContent = data.nightTemp + '°C';
+                targetTempSpan.textContent = data.targetTemp + '°C';
+                windowStatusSpan.textContent = data.windowOpen ? 'Offen' : 'Geschlossen';
+                batteryChargeSpan.textContent = data.batteryCharge + '%';
+                statusIndicator.textContent = data.status ? 'Online' : 'Offline';
 
                 let energy = data.energy.toString(); // Konvertiere den Energieverbrauch in einen String
                 energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 ); // Füge das Komma ein
@@ -182,6 +187,7 @@
 
         window.onload = async function () {
             // await setSwitchInfo();
+            await setTemperaturInfo();
         };
     </script>
 </head>
@@ -268,27 +274,27 @@ Accordion mit debug info
                 <div class="card mb-3">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center">Ort: <span
-                                id="ort-temp">Wohnzimmer?</span></li>
+                                id="ortTemp">Wohnzimmer?</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Aktuelle
-                            Temperatur: <span id="current-temp">-</span></li>
+                            Temperatur: <span id="currentTemp">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Komforttemperatur:
-                            <span id="comfort-temp">-</span></li>
+                            <span id="comfortTemp">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Nachttemperatur:
-                            <span id="night-temp">-</span></li>
+                            <span id="nightTemp">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Zieltemperatur:
-                            <span id="target-temp">-</span></li>
+                            <span id="targetTemp">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">Fenster: <span
-                                id="window-status">-</span></li>
+                                id="windowStatus">-</span></li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Batterieladung:
                             <div>
-                                <span id="battery-charge">-</span>
+                                <span id="batteryCharge">-</span>
                                 <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
                             </div>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             Gerätestatus:
-                            <span class="status-indicator connected">-</span>
+                            <span class="statusIndicator connected">-</span>
                             <!-- Use "disconnected" class for a disconnected status -->
                         </li>
                     </ul>
@@ -434,6 +440,9 @@ Accordion mit debug info
                                     <div class="row">
                                         <div class="col-md-12">
                                             <!-- Buttons for different actions -->
+                                            <button onclick="handleThermostatClick('')"
+                                                    class="btn btn-primary btn-block mb-3">Get Temperature Device List
+                                            </button>
                                             <button onclick="handleThermostatClick('getCurrentTemp')"
                                                     class="btn btn-outline-primary btn-block mb-3">Get Current
                                                 Temperature

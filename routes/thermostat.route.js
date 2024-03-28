@@ -21,7 +21,7 @@ router.get( '/', async ( req, res ) => {
 
 // Route for getting the state
 router.get( '/:id', async ( req, res ) => {
-    const switchId = req.params.id;
+    const id = req.params.id;
     try {
         const [
             currentTemp,
