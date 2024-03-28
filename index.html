@@ -63,7 +63,7 @@
             const thermostatId = action === '' ? '' : '/' + document.getElementById( 'thermostatIdInput' ).value;
 
             try {
-                const response = await fetch( `/thermostat/${action}/${thermostatId}` );
+                const response = await fetch( `/thermostat/${action}${thermostatId}` );
                 const data = await response.json();
 
                 // Display the status code
@@ -112,7 +112,7 @@
                 // Setzen der Werte aus dem Response
                 nameSpan.textContent = data.name;
                 temperatureSpan.textContent = data.temperature + '°C';
-                toggleSwitch.checked = !data.status;
+                toggleSwitch.checked = data.status;
                 powerSpan.textContent = data.power + ' W';
                 presenceSpan.textContent = data.presence ? 'Online' : 'Offline';
 
@@ -137,24 +137,24 @@
 
 
         async function setTemperaturInfo() {
-            const switchId = document.getElementById( 'thermostatIdInput' ).value;
+            const id = document.getElementById( 'thermostatIdInput' ).value;
 
             try {
-                const response = await fetch( `/switches/${switchId}/` );
+                const response = await fetch( `/thermostat/${id}/` );
                 const data = await response.json();
 
                 console.log( 'res', response )
                 console.log( 'data', data )
 
                 // Zugriff auf die span-Elemente
-                const ortTemp = document.querySelector('#ortTemp');
-                const currentTempSpan = document.querySelector('#currentTemp');
-                const comfortTempSpan = document.querySelector('#comfortTemp');
-                const nightTempSpan = document.querySelector('#nightTemp');
-                const targetTempSpan = document.querySelector('#targetTemp');
-                const windowStatusSpan = document.querySelector('#windowStatus');
-                const batteryChargeSpan = document.querySelector('#batteryCharge');
-                const statusIndicator = document.querySelector('#statusIndicator');
+                const ortTemp = document.querySelector( '#ortTemp' );
+                const currentTempSpan = document.querySelector( '#currentTemp' );
+                const comfortTempSpan = document.querySelector( '#comfortTemp' );
+                const nightTempSpan = document.querySelector( '#nightTemp' );
+                const targetTempSpan = document.querySelector( '#targetTemp' );
+                const windowStatusSpan = document.querySelector( '#windowStatus' );
+                const batteryChargeSpan = document.querySelector( '#batteryCharge' );
+                const statusIndicator = document.querySelector( '#statusIndicator' );
 
                 // Setzen der Werte aus dem Response (data)
                 ortTemp.textContent = data.name;
@@ -164,7 +164,6 @@
                 targetTempSpan.textContent = data.targetTemp + '°C';
                 windowStatusSpan.textContent = data.windowOpen ? 'Offen' : 'Geschlossen';
                 batteryChargeSpan.textContent = data.batteryCharge + '%';
-                statusIndicator.textContent = data.status ? 'Online' : 'Offline';
 
                 let energy = data.energy.toString(); // Konvertiere den Energieverbrauch in einen String
                 energy = energy.substring( 0, energy.length - 3 ) + ',' + energy.substring( energy.length - 3 ); // Füge das Komma ein
@@ -185,9 +184,15 @@
             }
         }
 
+        async function updateStats() {
+            await Promise.all( [
+                setSwitchInfo(),
+                setTemperaturInfo()
+            ]);
+        }
+
         window.onload = async function () {
-            // await setSwitchInfo();
-            await setTemperaturInfo();
+            await updateStats();
         };
     </script>
 </head>
@@ -291,11 +296,6 @@ Accordion mit debug info
                                 <span id="batteryCharge">-</span>
                                 <i class="battery-icon">&#x1F50B;</i> <!-- battery emoji as icon -->
                             </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Gerätestatus:
-                            <span class="statusIndicator connected">-</span>
-                            <!-- Use "disconnected" class for a disconnected status -->
                         </li>
                     </ul>
                 </div>
