@@ -2,10 +2,10 @@
   "name": "fritzbox-api-server",
   "version": "1.0.0",
   "description": "Home automation API for Fritz!Box, Fritz!DECT and FRITZ!Powerline devices",
-  "main": "index.js",
+  "main": "fritz_rest_api.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon fritz_rest_api.js",
+    "start": "node fritz_rest_api.js"
   },
   "author": "Marcello Alte",
   "license": "ISC",
