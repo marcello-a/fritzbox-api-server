@@ -179,50 +179,6 @@
             };
         }
 
-        function createThermostatTable(data) {
-            var tableContainer = document.getElementById( 'thermostatTableContainer' );
-            var table = document.createElement( 'table' );
-            table.className = 'table';
-
-            // Erstelle Tabellenkopf
-            var thead = document.createElement( 'thead' );
-            var headerRow = document.createElement( 'tr' );
-            headerRow.style.backgroundColor = 'bg-light'; // Hintergrundfarbe für den Kopf
-            headerRow.style.color = 'black'; // Textfarbe für den Kopf
-
-            // Füge den Wert von data['Name'] in den Tabellenkopf ein
-            var nameHeader = document.createElement( 'th' );
-            nameHeader.textContent = 'Name';
-            headerRow.appendChild( nameHeader );
-
-            // Füge die übrigen Spaltenüberschriften hinzu
-            Object.keys( data[0] ).forEach( function (key, index) {
-                if ( key !== 'Name' ) {
-                    var th = document.createElement( 'th' );
-                    th.textContent = key;
-                    headerRow.appendChild( th );
-                }
-            } );
-
-            thead.appendChild( headerRow );
-            table.appendChild( thead );
-
-            // Erstelle Tabellenkörper (Werte)
-            var tbody = document.createElement( 'tbody' );
-            data.forEach( function (item) {
-                var row = document.createElement( 'tr' );
-                Object.keys( item ).forEach( function (key, index) {
-                    var valueCell = document.createElement( 'td' );
-                    valueCell.textContent = item[key];
-                    row.appendChild( valueCell );
-                } );
-                tbody.appendChild( row );
-            } );
-            table.appendChild( tbody );
-
-            tableContainer.appendChild( table );
-        }
-
         // Die Funktion fetch wird durch eine XMLHttpRequest ersetzt
         function fetch(url) {
             return new Promise( function (resolve, reject) {
@@ -256,48 +212,46 @@
             table.className = 'table';
 
             // Erstelle Tabellenkopf
-            var thead = document.createElement('thead');
-            var headerRow = document.createElement('tr');
+            var thead = document.createElement( 'thead' );
+            var headerRow = document.createElement( 'tr' );
             headerRow.style.backgroundColor = 'bg-light'; // Hintergrundfarbe für den Kopf
             headerRow.style.color = 'black'; // Textfarbe für den Kopf
 
             // Füge den Wert von data['Name'] in den Tabellenkopf ein
-            var nameHeader = document.createElement('th');
+            var nameHeader = document.createElement( 'th' );
             nameHeader.textContent = 'Name';
-            headerRow.appendChild(nameHeader);
+            headerRow.appendChild( nameHeader );
 
             // Füge die übrigen Spaltenüberschriften hinzu
-            for (var i = 0; i < Object.keys(data[0]).length; i++) {
-                var key = Object.keys(data[0])[i];
-                if (key !== 'Name') {
-                    var th = document.createElement('th');
+            for ( var i = 0; i < Object.keys( data[0] ).length; i++ ) {
+                var key = Object.keys( data[0] )[i];
+                if ( key !== 'Name' ) {
+                    var th = document.createElement( 'th' );
                     th.textContent = key;
-                    headerRow.appendChild(th);
+                    headerRow.appendChild( th );
                 }
             }
 
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
+            thead.appendChild( headerRow );
+            table.appendChild( thead );
 
             // Erstelle Tabellenkörper (Werte)
-            var tbody = document.createElement('tbody');
-            for (var j = 0; j < data.length; j++) {
+            var tbody = document.createElement( 'tbody' );
+            for ( var j = 0; j < data.length; j++ ) {
                 var item = data[j];
-                var row = document.createElement('tr');
-                for (var k = 0; k < Object.keys(item).length; k++) {
-                    var itemKey = Object.keys(item)[k];
-                    var valueCell = document.createElement('td');
+                var row = document.createElement( 'tr' );
+                for ( var k = 0; k < Object.keys( item ).length; k++ ) {
+                    var itemKey = Object.keys( item )[k];
+                    var valueCell = document.createElement( 'td' );
                     valueCell.textContent = item[itemKey];
-                    row.appendChild(valueCell);
+                    row.appendChild( valueCell );
                 }
-                tbody.appendChild(row);
+                tbody.appendChild( row );
             }
-            table.appendChild(tbody);
+            table.appendChild( tbody );
 
-            tableContainer.appendChild(table);
+            tableContainer.appendChild( table );
         }
-
-
 
         // Statt async/await werden herkömmliche Promise-Methoden verwendet
         function setSwitchInfo() {
@@ -399,21 +353,6 @@
                     fetchAllThermostatData( thermostatIds )
                         .then( function (data) {
                             createThermostatTable( data );
-
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('POST', '/thermostat/setLastResponse');
-                            xhr.setRequestHeader('Content-Type', 'application/json'); // Setze den Content-Type-Header
-                            xhr.onload = function () {
-                                if (xhr.status === 200) {
-                                    console.log(xhr.responseText);
-                                } else {
-                                    console.log('Error: ' + xhr.status);
-                                }
-                            };
-                            xhr.onerror = function () {
-                                console.log('Network error');
-                            };
-                            xhr.send(JSON.stringify(data)); // Sende die Daten als JSON-String
                         } )
                         .catch( function (error) {
                             console.error( 'Fehler beim Abrufen der Daten:', error );
@@ -453,9 +392,9 @@
             ] );
         }
 
-        // Das Laden der Seite startet die Aktualisierung der Statistiken
-        window.onload = async function () {
-            await updateStats();
+        // Das darf niemals async / await sein.
+        window.onload = function () {
+            updateStats();
         };
 
 
